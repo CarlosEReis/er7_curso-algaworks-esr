@@ -2,19 +2,21 @@ package com.er7.er7foodapi.infrastructure.repository;
 
 import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.repository.RestauranteRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Repository
 public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public List<Restaurante> lista() {
+    public List<Restaurante> listar() {
         return manager.createQuery("from Restaurante", Restaurante.class).getResultList();
     }
 
