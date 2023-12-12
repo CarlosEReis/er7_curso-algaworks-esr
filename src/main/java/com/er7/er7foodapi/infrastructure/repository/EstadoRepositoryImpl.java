@@ -16,7 +16,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
     private EntityManager manager;
 
     @Override
-    public List<Estado> buscar() {
+    public List<Estado> listar() {
         return manager.createQuery("from Estado", Estado.class).getResultList();
     }
 
