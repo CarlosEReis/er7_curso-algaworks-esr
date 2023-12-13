@@ -3,6 +3,7 @@ package com.er7.er7foodapi.api.controller;
 import com.er7.er7foodapi.api.model.CozinhasXmlWrapper;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +34,18 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha criar(@RequestBody Cozinha cozinha) {
+    public Cozinha adicionar(@RequestBody Cozinha cozinha) {
         return this.cozinhaRepository.salvar(cozinha);
+    }
+
+    @PutMapping("/{cozinhaId}")
+    public  ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        var cozinhzaDB = this.cozinhaRepository.buscar(cozinhaId);
+        if ( cozinhzaDB == null )
+            return ResponseEntity.notFound().build();
+
+        BeanUtils.copyProperties(cozinha, cozinhzaDB, "id");
+        this.cozinhaRepository.salvar(cozinhzaDB);
+        return ResponseEntity.ok(cozinhzaDB);
     }
 }
