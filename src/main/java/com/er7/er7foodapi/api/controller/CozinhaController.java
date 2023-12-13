@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.api.model.CozinhasXmlWrapper;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class CozinhaController {
     @GetMapping
     public List<Cozinha> listar() {
         return this.cozinhaRepository.listar();
+    }
+
+    @GetMapping( produces = MediaType.APPLICATION_XML_VALUE)
+    public CozinhasXmlWrapper listarXML() {
+        return new CozinhasXmlWrapper(this.cozinhaRepository.listar());
     }
 
     @GetMapping("/{cozinhaId}")
