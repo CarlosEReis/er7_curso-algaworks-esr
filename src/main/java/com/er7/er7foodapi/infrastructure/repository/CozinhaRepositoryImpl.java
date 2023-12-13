@@ -2,6 +2,7 @@ package com.er7.er7foodapi.infrastructure.repository;
 
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,9 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @Transactional
     @Override
-    public void remover(Cozinha cozinha) {
-        cozinha = buscar(cozinha.getId());
+    public void remover(Long id) {
+        var cozinha = buscar(id);
+        if (cozinha == null) throw new EmptyResultDataAccessException(1);
         manager.remove(cozinha);
     }
 }

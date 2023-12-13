@@ -1,5 +1,7 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
+import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
@@ -53,13 +55,11 @@ public class CozinhaController {
 
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
-        var cozinhaDB = this.cozinhaRepository.buscar(cozinhaId);
-        if (cozinhaDB == null) return ResponseEntity.notFound().build();
         try {
-            this.cozinhaRepository.remover(cozinhaDB);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        return ResponseEntity.noContent().build();
+            this.cadastroCozinha.excluir(cozinhaId);
+            return ResponseEntity.noContent().build();
+        } catch (EntidadeNaoEncontradaException e) { return ResponseEntity.notFound().build();
+        } catch (EntidadeEmUsoException e) { return ResponseEntity.status(HttpStatus.CONFLICT).build(); }
+
     }
 }
