@@ -45,7 +45,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizazr(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
         var restauranteDB = this.restauranteRepository.buscar(restauranteId);
         if (restauranteDB == null) return ResponseEntity.notFound().build();
         BeanUtils.copyProperties(restaurante, restauranteDB, "id");
