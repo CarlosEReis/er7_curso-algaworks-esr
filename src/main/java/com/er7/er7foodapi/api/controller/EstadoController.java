@@ -24,14 +24,14 @@ public class EstadoController {
 
     @GetMapping
     public List<Estado> listar() {
-        return this.estadoRepository.listar();
+        return this.estadoRepository.findAll();
     }
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        var estado = this.estadoRepository.buscar(estadoId);
-        if (estado == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(estado);
+        var estado = this.estadoRepository.findById(estadoId);
+        if (estado.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(estado.get());
     }
 
     @PostMapping

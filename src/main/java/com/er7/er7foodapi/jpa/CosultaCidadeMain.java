@@ -16,7 +16,7 @@ public class CosultaCidadeMain {
 
         CidadeRepository cidadeRepository = applicationContext.getBean(CidadeRepository.class);
 
-        cidadeRepository.listar()
+        cidadeRepository.findAll()
             .forEach(
                 c -> System.out.printf("%d - %s -- %s\n",
                     c.getId(),

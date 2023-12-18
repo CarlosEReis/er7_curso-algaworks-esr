@@ -1,14 +1,12 @@
 package com.er7.er7foodapi.domain.repository;
 
 import com.er7.er7foodapi.domain.model.Restaurante;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface RestauranteRepository {
+@Repository
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
-    List<Restaurante> listar();
-    Restaurante buscar(Long id);
-    Restaurante salvar(Restaurante restaurante);
-    void remover(Restaurante restaurante);
 }

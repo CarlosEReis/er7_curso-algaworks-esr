@@ -17,21 +17,22 @@ public class CadastroEstadoService {
     private EstadoRepository estadoRepository;
 
     public Estado salvar(Estado estado) {
-        return this.estadoRepository.salvar(estado);
+        return this.estadoRepository.save(estado);
     }
 
     public Estado Atualizar(Long estadoId, Estado estado) {
-        var estadoDB = this.estadoRepository.buscar(estadoId);
-        if (estadoDB == null)
-            throw new EntidadeNaoEncontradaException(
-                String.format("Não existe um cadastro de estado com o código %d.", estadoId));
+        var estadoDB = this.estadoRepository.findById(estadoId)
+            .orElseThrow(
+                () -> new EntidadeNaoEncontradaException(
+                    String.format("Não existe um cadastro de estado com o código %d.", estadoId)));
+
         BeanUtils.copyProperties(estado, estadoDB, "id");
         return this.salvar(estadoDB);
     }
 
     public void remover(Long estadoId) {
         try {
-            this.estadoRepository.remover(estadoId);
+            this.estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
                 String.format("Não existe um cadastro de estado com o código %d.", estadoId));

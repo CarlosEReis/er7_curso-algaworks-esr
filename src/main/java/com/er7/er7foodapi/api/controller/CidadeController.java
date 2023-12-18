@@ -25,14 +25,14 @@ public class CidadeController {
 
     @GetMapping
     public List<Cidade> listar() {
-        return this.cidadeRepository.listar();
+        return this.cidadeRepository.findAll();
     }
 
     @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-        var cidade = this.cidadeRepository.buscar(cidadeId);
-        if (cidade == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(cidade);
+        var cidade = this.cidadeRepository.findById(cidadeId);
+        if (cidade.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(cidade.get());
     }
 
     @PostMapping
@@ -47,12 +47,12 @@ public class CidadeController {
 
     @PutMapping("/{cidadeId}")
     public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        var cidadeDB = this.cidadeRepository.buscar(cidadeId);
-        if (cidadeDB == null) return ResponseEntity.notFound().build();
+        var cidadeDB = this.cidadeRepository.findById(cidadeId);
+        if (cidadeDB.isEmpty()) return ResponseEntity.notFound().build();
         BeanUtils.copyProperties(cidade, cidadeDB, "id");
         try {
-            cidadeDB = this.cidadeService.salvar(cidadeDB);
-            return ResponseEntity.ok(cidadeDB);
+            var cidadeAtualizada = this.cidadeService.salvar(cidadeDB.get());
+            return ResponseEntity.ok(cidadeAtualizada);
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
