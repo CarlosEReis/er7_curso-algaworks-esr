@@ -19,10 +19,12 @@ public class CadastroRestauranteService {
 
     public Restaurante adicionar(Restaurante restaurante) {
         var cozinhaId = restaurante.getCozinha().getId();
-        var cozinha = this.cozinhaRepository.buscar(cozinhaId);
-        if (cozinha == null)
-            throw new EntidadeNaoEncontradaException(
-                String.format("Cozinha com o id %d não existe.", cozinhaId));
+        var cozinha = this.cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(
+                    () -> new EntidadeNaoEncontradaException(
+                        String.format("Cozinha com o id %d não existe.", cozinhaId)));
+
+        restaurante.setCozinha(cozinha);
         return this.restauranteRepository.salvar(restaurante);
     }
 }

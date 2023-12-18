@@ -25,14 +25,14 @@ public class CozinhaController {
 
     @GetMapping
     public List<Cozinha> listar() {
-        return this.cozinhaRepository.listar();
+        return this.cozinhaRepository.findAll();
     }
 
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-        var cozinha = this.cozinhaRepository.buscar(cozinhaId);
-        if ( cozinha != null )
-            return ResponseEntity.ok(cozinha);
+        var cozinha = this.cozinhaRepository.findById(cozinhaId);
+        if ( cozinha.isPresent() )
+            return ResponseEntity.ok(cozinha.get());
         return ResponseEntity.notFound().build();
     }
 
@@ -44,21 +44,21 @@ public class CozinhaController {
 
     @PutMapping("/{cozinhaId}")
     public  ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-        var cozinhzaDB = this.cozinhaRepository.buscar(cozinhaId);
-        if ( cozinhzaDB == null )
+        var cozinhzaDB = this.cozinhaRepository.findById(cozinhaId);
+        if ( cozinhzaDB.isEmpty() )
             return ResponseEntity.notFound().build();
-        BeanUtils.copyProperties(cozinha, cozinhzaDB, "id");
-        this.cadastroCozinha.salvar(cozinhzaDB);
-        return ResponseEntity.ok(cozinhzaDB);
+        BeanUtils.copyProperties(cozinha, cozinhzaDB.get(), "id");
+        this.cadastroCozinha.salvar(cozinhzaDB.get());
+        return ResponseEntity.ok(cozinhzaDB.get());
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
+    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
         try {
             this.cadastroCozinha.excluir(cozinhaId);
             return ResponseEntity.noContent().build();
         } catch (EntidadeNaoEncontradaException e) { return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) { return ResponseEntity.status(HttpStatus.CONFLICT).build(); }
+        } catch (EntidadeEmUsoException e) { return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); }
 
     }
 }

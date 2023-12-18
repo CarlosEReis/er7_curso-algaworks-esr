@@ -23,8 +23,8 @@ public class AdicionaCozinhaMain {
         Cozinha cozinha2 = new Cozinha();
         cozinha2.setNome("Japonesa");
 
-        cozinha1 = cadastroCozinha.salvar(cozinha1);
-        cozinha2 = cadastroCozinha.salvar(cozinha2);
+        cozinha1 = cadastroCozinha.save(cozinha1);
+        cozinha2 = cadastroCozinha.save(cozinha2);
 
         System.out.printf("%d - %s", cozinha1.getId(), cozinha1.getNome());
         System.out.printf("%d - %s", cozinha2.getId(), cozinha2.getNome());
