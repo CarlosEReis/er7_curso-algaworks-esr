@@ -4,6 +4,8 @@ import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
 import com.er7.er7foodapi.domain.repository.RestauranteRepository;
+import com.er7.er7foodapi.infrastructure.repository.specification.RestauranteComFreteGratisSpec;
+import com.er7.er7foodapi.infrastructure.repository.specification.RestauranteComNomeSemelhanteSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +76,8 @@ public class TesteController {
     public List<Restaurante> restaurantesComFreteGratis(String nome) {
         var comFreteGratis = new RestauranteComFreteGratisSpec();
         var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
-        return restauranteRepository.findCriteria(nome, taxaFreteInicial, taxaFreteFinal);
+        return restauranteRepository
+            .findAll(
+                comFreteGratis.and(comNomeSemelhante));
     }
 }
