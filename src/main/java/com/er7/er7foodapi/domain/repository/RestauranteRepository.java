@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRepositoryQueries {
 
     //@Query("from Restaurante r where r.nome like %:nome% and r.cozinha.id = :id")
     List<Restaurante> consultaPorNome(String nome, @Param("id") Long cozinhaId);
