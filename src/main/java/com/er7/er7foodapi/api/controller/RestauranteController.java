@@ -53,7 +53,7 @@ public class RestauranteController {
         var restauranteDB = this.restauranteRepository.findById(restauranteId);
         if (restauranteDB.isEmpty()) return ResponseEntity.notFound().build();
         try {
-            BeanUtils.copyProperties(restaurante, restauranteDB.get(), "id", "formasPagamento");
+            BeanUtils.copyProperties(restaurante, restauranteDB.get(), "id", "formasPagamento", "endereco");
             var restauranteAtualizado = this.restauranteService.adicionar(restauranteDB.get());
             return ResponseEntity.ok(restauranteAtualizado);
         } catch (EntidadeNaoEncontradaException e) {
