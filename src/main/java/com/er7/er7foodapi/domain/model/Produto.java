@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,7 +20,7 @@ public class Produto {
     private String nome;
 
     @Column(nullable = false)
-    private String decricao;
+    private String descricao;
 
     @Column(nullable = false)
     private BigDecimal preco;
