@@ -1,11 +1,14 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Cidade;
 import com.er7.er7foodapi.domain.repository.CidadeRepository;
 import com.er7.er7foodapi.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,14 +36,22 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade adicionar(@RequestBody Cidade cidade) {
-        return this.cidadeService.salvar(cidade);
+        try {
+            return this.cidadeService.salvar(cidade);
+        } catch (EntidadeNaoEncontradaException e ) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
         var cidadeDB = this.cidadeService.buscarOuFalhar(cidadeId);
         BeanUtils.copyProperties(cidade, cidadeDB, "id");
-        return this.cidadeService.salvar(cidadeDB);
+        try {
+            return this.cidadeService.salvar(cidadeDB);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{cidadeId}")
