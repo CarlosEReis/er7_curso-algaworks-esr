@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadastroEstadoService {
 
+    public static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com o código %d.";
+    public static final String MSG_COZINHA_EM_USO = "Estado de código %d não pode ser removido, pois está em uso";
+
     @Autowired
     private EstadoRepository estadoRepository;
 
@@ -20,25 +23,33 @@ public class CadastroEstadoService {
         return this.estadoRepository.save(estado);
     }
 
-    public Estado Atualizar(Long estadoId, Estado estado) {
+    /*public Estado Atualizar(Long estadoId, Estado estado) {
         var estadoDB = this.estadoRepository.findById(estadoId)
             .orElseThrow(
                 () -> new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de estado com o código %d.", estadoId)));
+                    String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 
         BeanUtils.copyProperties(estado, estadoDB, "id");
         return this.salvar(estadoDB);
-    }
+    }*/
 
     public void remover(Long estadoId) {
         try {
             this.estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
-                String.format("Não existe um cadastro de estado com o código %d.", estadoId));
+                String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
+                String.format(MSG_COZINHA_EM_USO, estadoId));
         }
+    }
+
+    public Estado buscarOuFalhar(Long estadoId) {
+        return this.estadoRepository.findById(estadoId)
+            .orElseThrow(
+                () -> new EntidadeNaoEncontradaException(
+                    String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)
+            ));
     }
 }

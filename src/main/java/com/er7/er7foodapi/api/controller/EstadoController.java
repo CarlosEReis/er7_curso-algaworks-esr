@@ -5,6 +5,7 @@ import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.model.Estado;
 import com.er7.er7foodapi.domain.repository.EstadoRepository;
 import com.er7.er7foodapi.domain.service.CadastroEstadoService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,8 @@ public class EstadoController {
     }
 
     @GetMapping("/{estadoId}")
-    public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        var estado = this.estadoRepository.findById(estadoId);
-        if (estado.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(estado.get());
+    public Estado buscar(@PathVariable Long estadoId) {
+        return this.estadoService.buscarOuFalhar(estadoId);
     }
 
     @PostMapping
@@ -41,19 +40,15 @@ public class EstadoController {
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-        try {
-            estado = this.estadoService.Atualizar(estadoId, estado);
-            return ResponseEntity.ok(estado);
-        } catch (EntidadeNaoEncontradaException e) { return ResponseEntity.notFound().build();}
+    public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+        var estadoDB = this.estadoService.buscarOuFalhar(estadoId);
+        BeanUtils.copyProperties(estado, estadoDB, "id");
+        return this.estadoService.salvar(estadoDB);
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<?> remover(@PathVariable Long estadoId) {
-        try {
-            this.estadoService.remover(estadoId);
-            return ResponseEntity.noContent().build();
-        } catch (EntidadeNaoEncontradaException e) { return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) { return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long estadoId) {
+        this.estadoService.remover(estadoId);
     }
 }

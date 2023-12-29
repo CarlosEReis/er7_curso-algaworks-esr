@@ -32,41 +32,28 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-        var restaurante = this.restauranteRepository.findById(restauranteId);
-        if (restaurante.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(restaurante.get());
+    public Restaurante buscar(@PathVariable Long restauranteId) {
+        return this.restauranteService.buscarOuFalhar(restauranteId);
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-        try {
-            restaurante = restauranteService.adicionar(restaurante);
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+        return this.restauranteService.adicionar(restaurante);
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-        var restauranteDB = this.restauranteRepository.findById(restauranteId);
-        if (restauranteDB.isEmpty()) return ResponseEntity.notFound().build();
-        try {
-            BeanUtils.copyProperties(restaurante, restauranteDB.get(), "id", "formasPagamento");
-            var restauranteAtualizado = this.restauranteService.adicionar(restauranteDB.get());
-            return ResponseEntity.ok(restauranteAtualizado);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+        var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
+        BeanUtils.copyProperties(restaurante, restauranteDB, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+        return  this.restauranteService.adicionar(restauranteDB);
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
-        var restauranteDB = this.restauranteRepository.findById(restauranteId);
-        if (restauranteDB.isEmpty()) return ResponseEntity.notFound().build();
-        merge(campos, restauranteDB.get());
-        return this.atualizar(restauranteId, restauranteDB.get());
+    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
+        var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
+        merge(campos, restauranteDB);
+        return this.atualizar(restauranteId, restauranteDB);
     }
 
     private void merge(Map<String, Object> campos, Restaurante restauranteDestino) {
