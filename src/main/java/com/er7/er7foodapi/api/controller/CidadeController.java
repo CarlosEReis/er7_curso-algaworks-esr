@@ -1,6 +1,7 @@
 package com.er7.er7foodapi.api.controller;
 
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.er7.er7foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Cidade;
 import com.er7.er7foodapi.domain.repository.CidadeRepository;
@@ -38,19 +39,19 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return this.cidadeService.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException e ) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e ) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        var cidadeDB = this.cidadeService.buscarOuFalhar(cidadeId);
-        BeanUtils.copyProperties(cidade, cidadeDB, "id");
         try {
+            var cidadeDB = this.cidadeService.buscarOuFalhar(cidadeId);
+            BeanUtils.copyProperties(cidade, cidadeDB, "id");
             return this.cidadeService.salvar(cidadeDB);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
