@@ -1,7 +1,5 @@
 package com.er7.er7foodapi.api.controller;
 
-import com.er7.er7foodapi.api.exceptionhandler.Problema;
-import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Cidade;
@@ -10,10 +8,8 @@ import com.er7.er7foodapi.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
