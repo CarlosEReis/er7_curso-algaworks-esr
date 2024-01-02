@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.exceptionhandler;
 
+import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,15 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(EntidadeEmUsoException.class)
+    public ResponseEntity<?> trataEntidadeEmUsoException(EntidadeEmUsoException e) {
+        var problema = Problema.builder()
+                .datahora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
+    }
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e) {
