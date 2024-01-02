@@ -63,21 +63,4 @@ public class CidadeController {
         this.cidadeService.excluir(cidadeId);
     }
 
-    @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e) {
-        var problema = Problema.builder()
-                .datahora(LocalDateTime.now())
-                .mensagem(e.getMessage())
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
-    }
-
-    @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> trataEntidadeNaoEncontradaException(NegocioException e) {
-        var problema = Problema.builder()
-                .datahora(LocalDateTime.now())
-                .mensagem(e.getMessage())
-                .build();
-        return ResponseEntity.badRequest().body(problema);
-    }
 }
