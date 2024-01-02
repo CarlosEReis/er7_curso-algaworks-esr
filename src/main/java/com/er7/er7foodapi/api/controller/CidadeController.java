@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.api.exceptionhandler.Problema;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -59,5 +61,23 @@ public class CidadeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
         this.cidadeService.excluir(cidadeId);
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e) {
+        var problema = Problema.builder()
+                .datahora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<?> trataEntidadeNaoEncontradaException(NegocioException e) {
+        var problema = Problema.builder()
+                .datahora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+        return ResponseEntity.badRequest().body(problema);
     }
 }
