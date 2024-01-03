@@ -25,13 +25,15 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String MSG_ERRO_GENERICA_USUARIO_FINAL
+            = "Ocorreu um erro inesperado no sistema. Tente novamente, e se o problema persistir, entre em contato com o administrador do sistema.";
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var problemType = ProblemType.ERRO_DE_SISTEMA;
-        var detail = "Ocorreu um erro inesperado no sistema. Tente novamente, e se o problema persistir, entre em contato com o administrador do sistema.";
         ex.getStackTrace();
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
@@ -70,7 +72,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var status = HttpStatus.CONFLICT;
         var problemType = ProblemType.ENTIDADE_EM_USO;
         var detail = ex.getMessage();
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail)
+                .userMessage(detail)
+                .build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
@@ -132,7 +136,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var path = joinPath(ex.getPath());
         var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         var detail = String.format("A propriedade '%s' não existe. Remova a propriedade e tente novamente.", path);
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail)
+                .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                .build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -147,7 +153,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         System.out.println(path);
         var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         var detail = String.format("A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido. Corrija e informe o valor do tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail)
+                .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                .build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 }
