@@ -25,6 +25,16 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+        var problemType = ProblemType.ERRO_DE_SISTEMA;
+        var detail = "Ocorreu um erro inesperado no sistema. Tente novamente, e se o problema persistir, entre em contato com o administrador do sistema.";
+        ex.getStackTrace();
+        var problem = createProblemBuilder(status, problemType, detail).build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         var problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
