@@ -2,7 +2,6 @@ package com.er7.er7foodapi.domain.model;
 
 import com.er7.er7foodapi.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +12,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -36,17 +37,17 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private LocalDateTime dataAtualizacao;
 
-    @NotBlank(groups = Groups.CadastroRestaurante.class)
+    @NotBlank
     @Column(nullable = false)
     private String nome;
 
-    @PositiveOrZero(groups = Groups.CadastroRestaurante.class)
+    @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
     //@JsonIgnoreProperties("hibernateLazyInitializer")
     //@JsonIgnore
-    @Valid @NotNull(groups = Groups.CadastroRestaurante.class)
+    @Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
