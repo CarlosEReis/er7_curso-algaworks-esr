@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
+import com.er7.er7foodapi.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 public class Cozinha {
 
-    @NotNull
+    @NotNull(groups = Groups.CadastroRestaurante.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

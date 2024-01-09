@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.Groups;
 import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +48,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
+        public Restaurante adicionar(@RequestBody @Validated(Groups.CadastroRestaurante.class) Restaurante restaurante) {
         try {
             return this.restauranteService.adicionar(restaurante);
         } catch (CozinhaNaoEncontradaException e) {

@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
+import com.er7.er7foodapi.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -35,17 +36,17 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private LocalDateTime dataAtualizacao;
 
-    @NotBlank
+    @NotBlank(groups = Groups.CadastroRestaurante.class)
     @Column(nullable = false)
     private String nome;
 
-    @PositiveOrZero
+    @PositiveOrZero(groups = Groups.CadastroRestaurante.class)
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
     //@JsonIgnoreProperties("hibernateLazyInitializer")
     //@JsonIgnore
-    @Valid @NotNull
+    @Valid @NotNull(groups = Groups.CadastroRestaurante.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
