@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String MSG_ERRO_GENERICA_USUARIO_FINAL
             = "Ocorreu um erro inesperado no sistema. Tente novamente, e se o problema persistir, entre em contato com o administrador do sistema.";
 
+    @Autowired
+    private MessageSource messageSource;
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -48,11 +54,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
         var erros = ex.getBindingResult()
                 .getFieldErrors().stream()
-                .map(fieldError ->
-                    Problem.Field.builder()
-                        .name(fieldError.getField())
-                        .userMessage(fieldError.getDefaultMessage())
-                        .build())
+                .map(fieldError -> {
+                    var userMessage = this.messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                    return Problem.Field.builder()
+                            .name(fieldError.getField())
+                            .userMessage(userMessage)
+                            .build();
+                })
                 .toList();
         var probem = createProblemBuilder(status, problemType, detail)
                 .userMessage(detail)
