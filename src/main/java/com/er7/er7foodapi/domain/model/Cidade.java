@@ -1,6 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
-import com.er7.er7foodapi.Groups;
+import com.er7.er7foodapi.core.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,4 +1,4 @@
-package com.er7.er7foodapi;
+package com.er7.er7foodapi.core;
 
 public interface Groups {
 
