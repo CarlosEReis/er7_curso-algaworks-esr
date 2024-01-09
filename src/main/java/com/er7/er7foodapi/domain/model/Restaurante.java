@@ -37,7 +37,7 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private LocalDateTime dataAtualizacao;
 
-    @NotBlank
+    @NotBlank(message = "Nome do restaurante não pode ser nulo")
     @Column(nullable = false)
     private String nome;
 
