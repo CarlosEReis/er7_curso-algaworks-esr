@@ -1,16 +1,14 @@
 package com.er7.er7foodapi.api.controller;
 
-import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
-import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.model.Estado;
 import com.er7.er7foodapi.domain.repository.EstadoRepository;
 import com.er7.er7foodapi.domain.service.CadastroEstadoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,12 +33,12 @@ public class EstadoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar(@RequestBody Estado estado) {
+    public Estado adicionar(@RequestBody @Valid Estado estado) {
         return this.estadoService.salvar(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+    public Estado atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
         var estadoDB = this.estadoService.buscarOuFalhar(estadoId);
         BeanUtils.copyProperties(estado, estadoDB, "id");
         return this.estadoService.salvar(estadoDB);
