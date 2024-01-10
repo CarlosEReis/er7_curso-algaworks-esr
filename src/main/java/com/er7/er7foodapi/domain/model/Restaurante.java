@@ -3,6 +3,7 @@ package com.er7.er7foodapi.domain.model;
 import com.er7.er7foodapi.core.Groups;
 import com.er7.er7foodapi.core.Multiplo;
 import com.er7.er7foodapi.core.TaxaFrete;
+import com.er7.er7foodapi.core.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,13 +14,17 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@ValorZeroIncluiDescricao(
+        valorField = "taxaFrete",
+        descricaoField = "nome",
+        descricaoObrigatoria = "Frete Grátis")
 @Data @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Restaurante {
