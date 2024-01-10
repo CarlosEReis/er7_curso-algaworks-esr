@@ -1,6 +1,7 @@
 package com.er7.er7foodapi.domain.model;
 
 import com.er7.er7foodapi.core.Groups;
+import com.er7.er7foodapi.core.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,8 +42,8 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @NotNull
-    @PositiveOrZero(message = "{TaxaFrete.invalida}")
+    @NotNull @TaxaFrete
+    //@PositiveOrZero(message = "{TaxaFrete.invalida}")
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
