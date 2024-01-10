@@ -1,6 +1,7 @@
 package com.er7.er7foodapi.domain.model;
 
 import com.er7.er7foodapi.core.Groups;
+import com.er7.er7foodapi.core.Multiplo;
 import com.er7.er7foodapi.core.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -42,7 +43,7 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @NotNull @TaxaFrete
+    @NotNull @TaxaFrete @Multiplo(numero = 5)
     //@PositiveOrZero(message = "{TaxaFrete.invalida}")
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
