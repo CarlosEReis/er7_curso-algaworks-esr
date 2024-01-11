@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.exceptionhandler;
 
+import com.er7.er7foodapi.core.validation.ValidacaoException;
 import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -51,10 +53,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, HttpHeaders headers, HttpStatus status, WebRequest request) {
         var problemType = ProblemType.DADOS_INVALIDOS;
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
-        var problemObjects = ex.getBindingResult()
-                .getAllErrors().stream()
+        var problemObjects = bindingResult.getAllErrors()
+                .stream()
                 .map(objectError -> {
                     var userMessage = this.messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
                     var name = objectError.getObjectName();
