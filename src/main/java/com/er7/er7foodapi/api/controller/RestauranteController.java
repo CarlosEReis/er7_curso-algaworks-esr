@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.core.validation.ValidacaoException;
 import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Restaurante;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +34,9 @@ public class RestauranteController {
 
     @Autowired
     private CadastroRestauranteService restauranteService;
+
+    @Autowired
+    private SmartValidator validator;
 
     @GetMapping
     public List<Restaurante> listar() {
@@ -67,7 +73,14 @@ public class RestauranteController {
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
         merge(campos, restauranteDB, request);
+        validate(restauranteDB, "restaurante");
         return this.atualizar(restauranteId, restauranteDB);
+    }
+
+    private void validate(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, objectName);
+        this.validator.validate(restaurante, bindingResult);
+        if (bindingResult.hasErrors()) throw new ValidacaoException(bindingResult);
     }
 
     private void merge(Map<String, Object> campos, Restaurante restauranteDestino, HttpServletRequest request) {
