@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,19 +53,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         var problemType = ProblemType.DADOS_INVALIDOS;
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
-        var erros = ex.getBindingResult()
-                .getFieldErrors().stream()
-                .map(fieldError -> {
-                    var userMessage = this.messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-                    return Problem.Field.builder()
-                            .name(fieldError.getField())
+        var problemObjects = ex.getBindingResult()
+                .getAllErrors().stream()
+                .map(objectError -> {
+                    var userMessage = this.messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+                    var name = objectError.getObjectName();
+
+                    if (objectError instanceof FieldError) name = ((FieldError) objectError).getField();
+
+                    return Problem.Object.builder()
+                            .name(name)
                             .userMessage(userMessage)
                             .build();
                 })
                 .toList();
         var probem = createProblemBuilder(status, problemType, detail)
                 .userMessage(detail)
-                .fields(erros)
+                .objects(problemObjects)
                 .build();
         return handleExceptionInternal(ex, probem, new HttpHeaders(), status, request);
     }
