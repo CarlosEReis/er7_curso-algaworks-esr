@@ -55,7 +55,17 @@ class CadastroCozinhaIT {
 			.body("nome", Matchers.hasItems("Tailandesa", "Indiana"));
 	}
 
-
+	@Test
+	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
+		given()
+			.body("{ \"nome\": \"Chinesa\" }")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
+	}
 }
 
 
