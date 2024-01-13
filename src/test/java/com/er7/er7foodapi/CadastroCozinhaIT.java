@@ -73,6 +73,29 @@ class CadastroCozinhaIT {
 			.statusCode(HttpStatus.CREATED.value());
 	}
 
+	@Test
+	public void deveRetornarRespostaEStatusCorretos_QuandoConsultaCozinhaExistente() {
+		given()
+			.pathParams("cozinhaID", 2)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaID}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", Matchers.equalTo("Americana"));
+	}
+
+	@Test
+	public void deveRetornarStatus404_QuandoConsultaCozinhaInexistente() {
+		given()
+			.pathParams("cozinhaID", 100)
+			.accept(ContentType.JSON)
+			.when()
+			.get("/{cozinhaID}")
+			.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
+	}
+
 	private void preparaDados() {
 		var cozinha1 = new Cozinha();
 		cozinha1.setNome("Tailandesa");
