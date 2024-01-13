@@ -1,9 +1,10 @@
 package com.er7.er7foodapi;
 
-import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
+import com.er7.er7foodapi.domain.model.Cozinha;
+import com.er7.er7foodapi.domain.repository.CozinhaRepository;
+import com.er7.er7foodapi.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,10 @@ import static io.restassured.RestAssured.given;
 @TestPropertySource("/application-test.properties")
 class CadastroCozinhaIT {
 
+
 	@LocalServerPort private int port;
-	@Autowired private CadastroCozinhaService cozinhaService;
-	@Autowired private Flyway flyway;
+	@Autowired DatabaseCleaner databaseCleaner;
+	@Autowired CozinhaRepository cozinhaRepository;
 
 	// cenário
 	// ação
@@ -34,7 +36,8 @@ class CadastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
 
-		flyway.migrate();
+		databaseCleaner.clearTables();
+		preparaDados();
 	}
 
 	@Test
@@ -48,14 +51,14 @@ class CadastroCozinhaIT {
 	}
 
 	@Test
-	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(4))
-			.body("nome", Matchers.hasItems("Tailandesa", "Indiana"));
+			.body("", Matchers.hasSize(2))
+			.body("nome", Matchers.hasItems("Tailandesa", "Americana"));
 	}
 
 	@Test
@@ -68,6 +71,16 @@ class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
+	}
+
+	private void preparaDados() {
+		var cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+
+		var cozinha2 = new Cozinha();
+		cozinha2.setNome("Americana");
+		cozinhaRepository.save(cozinha2);
 	}
 }
 
