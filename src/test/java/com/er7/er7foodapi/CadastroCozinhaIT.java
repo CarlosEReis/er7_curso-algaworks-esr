@@ -3,6 +3,7 @@ package com.er7.er7foodapi;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +39,22 @@ class CadastroCozinhaIT {
 		.then()
 			.statusCode(HttpStatus.OK.value());
 	}
+
+	@Test
+	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+		given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.body("", Matchers.hasSize(4))
+			.body("nome", Matchers.hasItems("Tailandesa", "Indiana"));
+	}
+
 
 }
 
