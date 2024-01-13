@@ -1,5 +1,7 @@
 package com.er7.er7foodapi;
 
+import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
+import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
 import org.junit.jupiter.api.Test;
@@ -21,8 +23,10 @@ class CadastroCozinhaIntegrationTests {
 	// ação
 	// validação
 
+	// givenPreCondicao_whenEstadoEmTeste_thenComportamentoEsperado
+
 	@Test
-	void testaCadastroCozinhaComSucesso() {
+	void deveAtribuirID_QuandoCadastrarCozinhaComDadosCorretos() {
 
 		var novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
@@ -34,13 +38,31 @@ class CadastroCozinhaIntegrationTests {
 	}
 
 	@Test
-	void testaCadastroCozinhaSemNome() {
+	void deveFalhar_QuandoCadastrarCozinhaSemNome() {
 		var novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 
 		ConstraintViolationException erroEsperado = assertThrows(ConstraintViolationException.class, () -> {
 			cozinhaService.salvar(novaCozinha);
 		});
-		assertThat(erroEsperado).isNull();
+		assertThat(erroEsperado).isNotNull();
+	}
+
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaEmUso() {
+		EntidadeEmUsoException erroEsperado =
+			assertThrows(
+				EntidadeEmUsoException.class,
+				() -> cozinhaService.excluir(1L));
+		assertThat(erroEsperado).isNotNull();
+	}
+
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
+		CozinhaNaoEncontradaException erroEsperado =
+			assertThrows(
+				CozinhaNaoEncontradaException.class,
+				() -> cozinhaService.excluir(1000L));
+		assertThat(erroEsperado).isNotNull();
 	}
 }
