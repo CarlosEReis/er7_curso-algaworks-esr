@@ -3,6 +3,7 @@ package com.er7.er7foodapi;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +17,9 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CadastroCozinhaIT {
 
-	@LocalServerPort
-	private int port;
-
-	@Autowired
-	private CadastroCozinhaService cozinhaService;
+	@LocalServerPort private int port;
+	@Autowired private CadastroCozinhaService cozinhaService;
+	@Autowired private Flyway flyway;
 
 	// cenário
 	// ação
@@ -32,6 +31,8 @@ class CadastroCozinhaIT {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
+
+		flyway.migrate();
 	}
 
 	@Test
