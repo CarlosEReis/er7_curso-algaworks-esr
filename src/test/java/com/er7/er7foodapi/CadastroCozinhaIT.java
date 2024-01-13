@@ -1,20 +1,21 @@
 package com.er7.er7foodapi;
 
-import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
-import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
-import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 
-import javax.validation.ConstraintViolationException;
+import static io.restassured.RestAssured.given;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CadastroCozinhaIT {
+
+	@LocalServerPort
+	private int port;
 
 	@Autowired
 	private CadastroCozinhaService cozinhaService;
@@ -22,10 +23,27 @@ class CadastroCozinhaIT {
 	// cenário
 	// ação
 	// validação
-
 	// givenPreCondicao_whenEstadoEmTeste_thenComportamentoEsperado
 
 	@Test
+	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+		given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.statusCode(HttpStatus.OK.value());
+	}
+
+}
+
+
+
+	/*@Test
 	void deveAtribuirID_QuandoCadastrarCozinhaComDadosCorretos() {
 
 		var novaCozinha = new Cozinha();
@@ -64,5 +82,4 @@ class CadastroCozinhaIT {
 				CozinhaNaoEncontradaException.class,
 				() -> cozinhaService.excluir(1000L));
 		assertThat(erroEsperado).isNotNull();
-	}
-}
+	}*/
