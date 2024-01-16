@@ -3,6 +3,7 @@ package com.er7.er7foodapi;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
 import com.er7.er7foodapi.util.DatabaseCleaner;
+import com.er7.er7foodapi.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
@@ -25,6 +26,10 @@ class CadastroCozinhaIT {
 	@Autowired DatabaseCleaner databaseCleaner;
 	@Autowired CozinhaRepository cozinhaRepository;
 
+	private static final Long ID_COZINHA_INEXISTENTE = 100L;
+	private long qtdeCozinhas = 0;
+	private String jsonCozinhaChinesa = "";
+
 	// cenário
 	// ação
 	// validação
@@ -35,6 +40,8 @@ class CadastroCozinhaIT {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
+
+		jsonCozinhaChinesa = ResourceUtils.getContentFromResource("/json/cozinha-chinesa.json");
 
 		databaseCleaner.clearTables();
 		preparaDados();
@@ -51,20 +58,20 @@ class CadastroCozinhaIT {
 	}
 
 	@Test
-	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
+	public void deveRetornarQuantidadeCorretaDeCozinhas_QuandoConsultarCozinhas() {
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(2))
+			.body("", Matchers.hasSize((int) qtdeCozinhas))
 			.body("nome", Matchers.hasItems("Tailandesa", "Americana"));
 	}
 
 	@Test
 	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
 		given()
-			.body("{ \"nome\": \"Chinesa\" }")
+			.body(jsonCozinhaChinesa)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
@@ -88,7 +95,7 @@ class CadastroCozinhaIT {
 	@Test
 	public void deveRetornarStatus404_QuandoConsultaCozinhaInexistente() {
 		given()
-			.pathParams("cozinhaID", 100)
+			.pathParams("cozinhaID", ID_COZINHA_INEXISTENTE)
 			.accept(ContentType.JSON)
 			.when()
 			.get("/{cozinhaID}")
@@ -104,6 +111,8 @@ class CadastroCozinhaIT {
 		var cozinha2 = new Cozinha();
 		cozinha2.setNome("Americana");
 		cozinhaRepository.save(cozinha2);
+
+		this.qtdeCozinhas = cozinhaRepository.count();
 	}
 }
 
