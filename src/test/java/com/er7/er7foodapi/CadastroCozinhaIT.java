@@ -21,7 +21,6 @@ import static io.restassured.RestAssured.given;
 @TestPropertySource("/application-test.properties")
 class CadastroCozinhaIT {
 
-
 	@LocalServerPort private int port;
 	@Autowired DatabaseCleaner databaseCleaner;
 	@Autowired CozinhaRepository cozinhaRepository;
@@ -97,9 +96,9 @@ class CadastroCozinhaIT {
 		given()
 			.pathParams("cozinhaID", ID_COZINHA_INEXISTENTE)
 			.accept(ContentType.JSON)
-			.when()
+		.when()
 			.get("/{cozinhaID}")
-			.then()
+		.then()
 			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 
