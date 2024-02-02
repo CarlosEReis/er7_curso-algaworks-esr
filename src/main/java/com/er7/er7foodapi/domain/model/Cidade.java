@@ -24,6 +24,7 @@ public class Cidade {
     @Column(nullable = false)
     private String nome;
 
+    //@JsonIgnoreProperties(value = "nome", allowGetters = true)
     @Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
     @ManyToOne
     @JoinColumn(name = "estado_id", nullable = false)
