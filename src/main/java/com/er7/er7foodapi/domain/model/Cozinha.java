@@ -1,6 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
-import com.er7.er7foodapi.core.Groups;
+import com.er7.er7foodapi.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;

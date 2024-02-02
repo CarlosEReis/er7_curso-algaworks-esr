@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.core;
+package com.er7.er7foodapi.core.validation;
 
 public interface Groups {
 

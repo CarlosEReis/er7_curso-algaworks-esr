@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.core;
+package com.er7.er7foodapi.core.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,13 +8,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-@Constraint(validatedBy = { MultiploValidator.class })
-public @interface Multiplo {
+@Target(ElementType.TYPE)
+@Constraint(validatedBy = { ValorZeroIncluiDescricaoValidator.class })
+public @interface ValorZeroIncluiDescricao {
 
-    String message() default "{ VALIDANDO NÚMERO MULTIPLO }";
+    String message() default "descrição obrigatória inválida";
     Class<?>[] groups() default  {};
     Class<? extends Payload>[] payload() default { };
 
-    int numero();
+    String valorField();
+    String descricaoField();
+    String descricaoObrigatoria();
 }
