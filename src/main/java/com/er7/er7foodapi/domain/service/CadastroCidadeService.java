@@ -2,14 +2,13 @@ package com.er7.er7foodapi.domain.service;
 
 import com.er7.er7foodapi.domain.exception.CidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
-import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.model.Cidade;
 import com.er7.er7foodapi.domain.repository.CidadeRepository;
-import com.er7.er7foodapi.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastroCidadeService {
@@ -22,6 +21,7 @@ public class CadastroCidadeService {
     @Autowired
     private CadastroEstadoService estadoService;
 
+    @Transactional
     public Cidade salvar(Cidade cidade) {
         var estadoId = cidade.getEstado().getId();
         var estado = this.estadoService.buscarOuFalhar(estadoId);
@@ -29,6 +29,7 @@ public class CadastroCidadeService {
         return this.cidadeRepository.save(cidade);
     }
 
+    @Transactional
     public void excluir(Long cidadeId) {
         try {
             this.cidadeRepository.deleteById(cidadeId);

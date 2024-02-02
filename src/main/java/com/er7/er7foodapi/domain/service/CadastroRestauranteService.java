@@ -5,6 +5,7 @@ import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastroRestauranteService {
@@ -15,6 +16,7 @@ public class CadastroRestauranteService {
     @Autowired
     private CadastroCozinhaService cozinhaService;
 
+    @Transactional
     public Restaurante adicionar(Restaurante restaurante) {
         var cozinhaId = restaurante.getCozinha().getId();
         var cozinha = this.cozinhaService.buscaOuFalha(cozinhaId);
