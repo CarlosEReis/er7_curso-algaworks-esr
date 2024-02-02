@@ -1,9 +1,8 @@
 package com.er7.er7foodapi.domain.model;
 
-import com.er7.er7foodapi.core.Groups;
-import com.er7.er7foodapi.core.ValorZeroIncluiDescricao;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.er7.er7foodapi.core.validation.Groups;
+import com.er7.er7foodapi.core.validation.ValorZeroIncluiDescricao;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,12 +32,12 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
+    //@JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private LocalDateTime dataCadastro;
 
-    @JsonIgnore
+    //@JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private LocalDateTime dataAtualizacao;
@@ -54,24 +53,24 @@ public class Restaurante {
 
     //@JsonIgnoreProperties("hibernateLazyInitializer")
     //@JsonIgnore
-    @JsonIgnoreProperties(value = "nome", allowGetters = true)
+    //@JsonIgnoreProperties(value = "nome", allowGetters = true)
     @Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Embedded
     private Endereco endereco;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name = "restaurante_id"),
         inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
-    @JsonIgnore
+    //@JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 }
