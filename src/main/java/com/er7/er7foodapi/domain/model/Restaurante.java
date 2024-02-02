@@ -2,7 +2,6 @@ package com.er7.er7foodapi.domain.model;
 
 import com.er7.er7foodapi.core.validation.Groups;
 import com.er7.er7foodapi.core.validation.ValorZeroIncluiDescricao;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +34,12 @@ public class Restaurante {
     //@JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     //@JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
-    private LocalDateTime dataAtualizacao;
+    private OffsetDateTime dataAtualizacao;
 
     @NotBlank(message = "Nome do restaurante não pode ser nulo")
     @Column(nullable = false)
