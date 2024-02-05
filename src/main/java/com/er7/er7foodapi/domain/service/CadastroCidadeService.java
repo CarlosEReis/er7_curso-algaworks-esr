@@ -33,6 +33,7 @@ public class CadastroCidadeService {
     public void excluir(Long cidadeId) {
         try {
             this.cidadeRepository.deleteById(cidadeId);
+            this.cidadeRepository.flush();
         } catch (EmptyResultDataAccessException e) {
             throw new CidadeNaoEncontradaException(cidadeId);
         } catch (DataIntegrityViolationException e) {

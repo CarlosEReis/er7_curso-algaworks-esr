@@ -37,6 +37,7 @@ public class CadastroEstadoService {
     public void remover(Long estadoId) {
         try {
             this.estadoRepository.deleteById(estadoId);
+            this.estadoRepository.flush();
         } catch (EmptyResultDataAccessException e) {
             throw new EstadoNaoEncontradoException(estadoId);
         } catch (DataIntegrityViolationException e) {
