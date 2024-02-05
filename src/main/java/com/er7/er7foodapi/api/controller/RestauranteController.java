@@ -1,12 +1,12 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.api.assembler.RestauranteInputDisassenbler;
 import com.er7.er7foodapi.api.assembler.RestauranteModelAssembler;
 import com.er7.er7foodapi.api.model.RestauranteModel;
 import com.er7.er7foodapi.api.model.input.RestauranteInput;
 import com.er7.er7foodapi.core.validation.ValidacaoException;
 import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
-import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.repository.RestauranteRepository;
 import com.er7.er7foodapi.domain.service.CadastroRestauranteService;
@@ -33,10 +33,11 @@ import java.util.Map;
 @RequestMapping("/restaurantes")
 public class RestauranteController {
 
+    @Autowired private SmartValidator validator;
     @Autowired private RestauranteRepository restauranteRepository;
     @Autowired private CadastroRestauranteService restauranteService;
-    @Autowired private SmartValidator validator;
     @Autowired private RestauranteModelAssembler restauranteModelAssembler;
+    @Autowired private RestauranteInputDisassenbler restauranteInputDisassenbler;
 
     @GetMapping
     public List<RestauranteModel> listar() {
@@ -53,7 +54,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.CREATED)
         public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            Restaurante restaurante = toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteInputDisassenbler.toDomainObject(restauranteInput);
             return restauranteModelAssembler.toModel(this.restauranteService.adicionar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
@@ -63,7 +64,7 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            Restaurante restaurante = toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteInputDisassenbler.toDomainObject(restauranteInput);
             var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
             BeanUtils.copyProperties(restaurante, restauranteDB, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
             return restauranteModelAssembler.toModel(this.restauranteService.adicionar(restauranteDB));
@@ -107,16 +108,4 @@ public class RestauranteController {
         }
     }
 
-
-    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-        Restaurante restaurante = new Restaurante();
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
-
-        restaurante.setCozinha(cozinha);
-        return restaurante;
-    }
 }
