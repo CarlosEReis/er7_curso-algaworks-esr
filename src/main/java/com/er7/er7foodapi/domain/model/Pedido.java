@@ -27,7 +27,7 @@ public class Pedido {
     private OffsetDateTime dataConfirmacao;
     private OffsetDateTime dataEntrega;
     private OffsetDateTime dataCancelamento;
-    @CreationTimestamp private LocalDateTime dataCriacao;
+    @CreationTimestamp private OffsetDateTime dataCriacao;
 
     @Embedded private Endereco enderecoEntrega;
     @ManyToOne @JoinColumn(nullable = false) private Restaurante restaurante;

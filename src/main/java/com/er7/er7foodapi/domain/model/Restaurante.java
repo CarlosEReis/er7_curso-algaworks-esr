@@ -1,6 +1,5 @@
 package com.er7.er7foodapi.domain.model;
 
-import com.er7.er7foodapi.core.validation.Groups;
 import com.er7.er7foodapi.core.validation.ValorZeroIncluiDescricao;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,11 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -41,11 +35,11 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private OffsetDateTime dataAtualizacao;
 
-    @NotBlank(message = "Nome do restaurante não pode ser nulo")
+    //@NotBlank(message = "Nome do restaurante não pode ser nulo")
     @Column(nullable = false)
     private String nome;
 
-    @NotNull //@TaxaFrete @Multiplo(numero = 5)
+    //@NotNull //@TaxaFrete @Multiplo(numero = 5)
     //@PositiveOrZero(message = "{TaxaFrete.invalida}")
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
@@ -53,7 +47,7 @@ public class Restaurante {
     //@JsonIgnoreProperties("hibernateLazyInitializer")
     //@JsonIgnore
     //@JsonIgnoreProperties(value = "nome", allowGetters = true)
-    @Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+    //@Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
