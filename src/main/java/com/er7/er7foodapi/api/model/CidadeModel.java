@@ -3,10 +3,11 @@ package com.er7.er7foodapi.api.model;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class CozinhaModel {
+@Setter
+public class CidadeModel {
 
     private Long id;
     private String nome;
+    private EstadoModel estado;
 }
