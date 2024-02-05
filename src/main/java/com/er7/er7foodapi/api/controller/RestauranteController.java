@@ -13,7 +13,6 @@ import com.er7.er7foodapi.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -64,9 +63,9 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            Restaurante restaurante = restauranteInputDisassenbler.toDomainObject(restauranteInput);
+            //Restaurante restaurante = restauranteInputDisassenbler.toDomainObject(restauranteInput);
             var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
-            BeanUtils.copyProperties(restaurante, restauranteDB, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+            restauranteInputDisassenbler.copyToDomainObject(restauranteInput, restauranteDB);
             return restauranteModelAssembler.toModel(this.restauranteService.adicionar(restauranteDB));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
