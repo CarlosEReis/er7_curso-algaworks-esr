@@ -25,38 +25,29 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private OffsetDateTime dataCadastro;
 
-    //@JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime(2)")
     private OffsetDateTime dataAtualizacao;
 
-    //@NotBlank(message = "Nome do restaurante não pode ser nulo")
+    private Boolean ativo = Boolean.TRUE;
+
     @Column(nullable = false)
     private String nome;
 
-    //@NotNull //@TaxaFrete @Multiplo(numero = 5)
-    //@PositiveOrZero(message = "{TaxaFrete.invalida}")
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-    //@JsonIgnoreProperties("hibernateLazyInitializer")
-    //@JsonIgnore
-    //@JsonIgnoreProperties(value = "nome", allowGetters = true)
-    //@Valid @NotNull @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
-    //@JsonIgnore
     @Embedded
     private Endereco endereco;
 
-    //@JsonIgnore
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name = "restaurante_id"),
@@ -66,4 +57,12 @@ public class Restaurante {
     //@JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
+
+    public void ativar() {
+       setAtivo(true);
+    }
+
+    public void inativar() {
+        setAtivo(false);
+    }
 }

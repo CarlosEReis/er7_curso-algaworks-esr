@@ -72,6 +72,18 @@ public class RestauranteController {
         }
     }
 
+    @PutMapping("/{restauranteID}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteID) {
+        restauranteService.ativar(restauranteID);
+    }
+
+    @DeleteMapping("/{restauranteID}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long restauranteID) {
+        restauranteService.inativar(restauranteID);
+    }
+
     /*@PatchMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
