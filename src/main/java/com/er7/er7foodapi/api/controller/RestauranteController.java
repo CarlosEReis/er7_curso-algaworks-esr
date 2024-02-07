@@ -5,6 +5,7 @@ import com.er7.er7foodapi.api.assembler.RestauranteModelAssembler;
 import com.er7.er7foodapi.api.model.RestauranteModel;
 import com.er7.er7foodapi.api.model.input.RestauranteInput;
 import com.er7.er7foodapi.core.validation.ValidacaoException;
+import com.er7.er7foodapi.domain.exception.CidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Restaurante;
@@ -67,7 +68,7 @@ public class RestauranteController {
             var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
             restauranteInputDisassenbler.copyToDomainObject(restauranteInput, restauranteDB);
             return restauranteModelAssembler.toModel(this.restauranteService.adicionar(restauranteDB));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

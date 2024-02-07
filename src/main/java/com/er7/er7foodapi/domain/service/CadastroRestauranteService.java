@@ -10,17 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CadastroRestauranteService {
 
-    @Autowired
-    private RestauranteRepository restauranteRepository;
-
-    @Autowired
-    private CadastroCozinhaService cozinhaService;
+    @Autowired private RestauranteRepository restauranteRepository;
+    @Autowired private CadastroCozinhaService cozinhaService;
+    @Autowired private CadastroCidadeService cidadeService;
 
     @Transactional
     public Restaurante adicionar(Restaurante restaurante) {
         var cozinhaId = restaurante.getCozinha().getId();
-        var cozinha = this.cozinhaService.buscaOuFalha(cozinhaId);
+        var cidadeID = restaurante.getEndereco().getCidade().getId();
+
+        var cozinha = cozinhaService.buscaOuFalha(cozinhaId);
+        var cidade = cidadeService.buscarOuFalhar(cidadeID);
+
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
         return this.restauranteRepository.save(restaurante);
     }
 
