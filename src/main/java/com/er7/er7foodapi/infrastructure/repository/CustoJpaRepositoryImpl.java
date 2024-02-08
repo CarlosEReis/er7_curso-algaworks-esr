@@ -25,4 +25,10 @@ public class CustoJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> im
             .getSingleResult();
         return Optional.ofNullable(entity);
     }
+
+    @Override
+    public void detach(T entity) {
+        manager.detach(entity);
+    }
+
 }
