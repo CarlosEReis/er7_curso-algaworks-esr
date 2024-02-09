@@ -1,6 +1,8 @@
 package com.er7.er7foodapi.domain.service;
 
+import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.exception.RestauranteNaoEncontradoException;
+import com.er7.er7foodapi.domain.model.FormaPagamento;
 import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CadastroRestauranteService {
 
+    @Autowired private CadastroFormaPagamentoService formaPagamentoService;
     @Autowired private RestauranteRepository restauranteRepository;
     @Autowired private CadastroCozinhaService cozinhaService;
     @Autowired private CadastroCidadeService cidadeService;
@@ -41,5 +44,27 @@ public class CadastroRestauranteService {
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return this.restauranteRepository.findById(restauranteId)
             .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+    }
+
+    @Transactional
+    public void desassociarFormaPagamento(Long restauranteID, Long formaPagamentoID) {
+        Restaurante restauranteDB = buscarOuFalhar(restauranteID);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoID);
+
+        if (restauranteDB.getFormasPagamento().contains(formaPagamento)) {
+            restauranteDB.removerFormaPagamento(formaPagamento);
+        } else {
+            throw new NegocioException(
+                String.format(
+                    "Não foi possível desassocionar. Restaurante de código %s, não possuir forma de pagamento de código %s associada.",
+                    restauranteID, formaPagamentoID));
+        }
+    }
+
+    @Transactional
+    public void associarFormaPagamento(Long restauranteID, Long formaPagamentoID) {
+        Restaurante restauranteDB = buscarOuFalhar(restauranteID);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoID);
+        restauranteDB.adicionarFormaPagamento(formaPagamento);
     }
 }
