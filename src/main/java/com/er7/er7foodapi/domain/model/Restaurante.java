@@ -50,6 +50,8 @@ public class Restaurante {
     @Embedded
     private Endereco endereco;
 
+    private Boolean aberto = Boolean.FALSE;
+
     @ManyToMany //(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name = "restaurante_id"),
@@ -74,5 +76,13 @@ public class Restaurante {
 
     public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
         return getFormasPagamento().add(formaPagamento);
+    }
+
+    public void abrir() {
+        setAberto(Boolean.TRUE);
+    }
+
+    public void fechar() {
+        setAberto(Boolean.FALSE);
     }
 }

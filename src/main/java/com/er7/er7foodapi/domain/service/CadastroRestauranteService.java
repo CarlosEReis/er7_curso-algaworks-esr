@@ -67,4 +67,16 @@ public class CadastroRestauranteService {
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoID);
         restauranteDB.adicionarFormaPagamento(formaPagamento);
     }
+
+    @Transactional
+    public void abrir(Long restauranteID) {
+        var restauranteDB = buscarOuFalhar(restauranteID);
+        restauranteDB.setAberto(Boolean.TRUE);
+    }
+
+    @Transactional
+    public void fechar(Long restauranteID) {
+        var restauranteDB = buscarOuFalhar(restauranteID);
+        restauranteDB.setAberto(Boolean.FALSE);
+    }
 }

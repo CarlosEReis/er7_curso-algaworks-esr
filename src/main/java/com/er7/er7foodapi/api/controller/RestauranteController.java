@@ -85,6 +85,18 @@ public class RestauranteController {
         restauranteService.inativar(restauranteID);
     }
 
+    @PutMapping("/{restauranteID}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long restauranteID) {
+        restauranteService.abrir(restauranteID);
+    }
+
+    @PutMapping("/{restauranteID}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long restauranteID) {
+        restauranteService.fechar(restauranteID);
+    }
+
     /*@PatchMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         var restauranteDB = this.restauranteService.buscarOuFalhar(restauranteId);
