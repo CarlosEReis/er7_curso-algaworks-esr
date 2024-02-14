@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CadastroUsuarioService {
@@ -69,7 +70,7 @@ public class CadastroUsuarioService {
         }
     }
 
-    public List<Grupo> listarGrupos(Long usuarioID) {
+    public Set<Grupo> listarGrupos(Long usuarioID) {
         return buscarOuFalhar(usuarioID).getGrupos();
     }
 

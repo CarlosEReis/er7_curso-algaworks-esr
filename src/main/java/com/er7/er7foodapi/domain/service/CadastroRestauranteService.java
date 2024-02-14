@@ -16,6 +16,7 @@ public class CadastroRestauranteService {
     @Autowired private RestauranteRepository restauranteRepository;
     @Autowired private CadastroCozinhaService cozinhaService;
     @Autowired private CadastroCidadeService cidadeService;
+    @Autowired private CadastroUsuarioService usuarioService;
 
     @Transactional
     public Restaurante adicionar(Restaurante restaurante) {
@@ -78,5 +79,23 @@ public class CadastroRestauranteService {
     public void fechar(Long restauranteID) {
         var restauranteDB = buscarOuFalhar(restauranteID);
         restauranteDB.setAberto(Boolean.FALSE);
+    }
+
+    @Transactional
+    public void desassociarResponsavel(Long restauranteID, Long responsavelID) {
+        var restaurante = buscarOuFalhar(restauranteID);
+        var responsavel = usuarioService.buscarOuFalhar(responsavelID);
+        if (restaurante.naoPossui(responsavel))
+            throw new NegocioException(
+                String.format("O restaurante de código %s, não possui um responsavel de código %s associado.",
+                    responsavelID, responsavelID));
+        restaurante.remove(responsavel);
+    }
+
+    @Transactional
+    public void associarResponsavel(Long restauranteID, Long responsavelID) {
+        var restaurante = buscarOuFalhar(restauranteID);
+        var responsavel = usuarioService.buscarOuFalhar(responsavelID);
+        restaurante.adiciona(responsavel);
     }
 }
