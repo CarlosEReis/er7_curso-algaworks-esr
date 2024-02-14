@@ -3,6 +3,7 @@ package com.er7.er7foodapi.domain.service;
 import com.er7.er7foodapi.domain.exception.EntidadeEmUsoException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.exception.UsuarioNaoEncontradoException;
+import com.er7.er7foodapi.domain.model.Grupo;
 import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class CadastroUsuarioService {
 
     public static final String MSG_USUARIO_EM_USO = "Usuario de código %d não pode ser removido, pois está em uso.";
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private CadastroGrupoService grupoService;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -66,5 +67,26 @@ public class CadastroUsuarioService {
             throw new EntidadeEmUsoException(
                 String.format(MSG_USUARIO_EM_USO, usuarioID));
         }
+    }
+
+    public List<Grupo> listarGrupos(Long usuarioID) {
+        return buscarOuFalhar(usuarioID).getGrupos();
+    }
+
+    @Transactional
+    public void desassociaGrupo(Long usuarioID, Long grupoID) {
+        var usuario = buscarOuFalhar(usuarioID);
+        var grupo = grupoService.buscarOuFalhar(grupoID);
+        if (usuario.naoPossui(grupo)) {
+            throw new NegocioException(String.format("Usuario de código %s, não possui o grupo de código %s", usuarioID, grupoID));
+        }
+        usuario.remove(grupo);
+    }
+
+    @Transactional
+    public void associoaGrupo(Long usuarioID, Long grupoID) {
+        var usuario = buscarOuFalhar(usuarioID);
+        var grupo = grupoService.buscarOuFalhar(grupoID);
+        usuario.adiciona(grupo);
     }
 }
