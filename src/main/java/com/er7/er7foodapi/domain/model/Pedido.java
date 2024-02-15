@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,13 @@ public class Pedido {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private BigDecimal subtotal;
     private BigDecimal taxaFrete;
     private BigDecimal valorTotal;
-    private StatusPedido status;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status = StatusPedido.CRIADO;
 
     private OffsetDateTime dataConfirmacao;
     private OffsetDateTime dataEntrega;
@@ -36,4 +37,19 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens = new ArrayList<>();
+
+    public void calcularValorTotal() {
+        this.subtotal = getItens().stream()
+            .map(item -> item.getPrecoTotal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.valorTotal = this.subtotal.add(this.taxaFrete);
+    }
+
+    public void definirFrete() {
+        setTaxaFrete(getRestaurante().getTaxaFrete());
+    }
+
+    public void atribuirPedidoAosItens() {
+        getItens().forEach(item -> item.setPedido(this));
+    }
 }
