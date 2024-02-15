@@ -1,7 +1,9 @@
 package com.er7.er7foodapi.api.controller;
 
 import com.er7.er7foodapi.api.assembler.PedidoModelAssembler;
+import com.er7.er7foodapi.api.assembler.PedidoResumoModelAssembler;
 import com.er7.er7foodapi.api.model.PedidoModel;
+import com.er7.er7foodapi.api.model.PedidoResumoModel;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +19,11 @@ public class PedidoController {
 
     @Autowired private EmissaoPedidoService pedidoService;
     @Autowired private PedidoModelAssembler pedidoModelAssembler;
+    @Autowired private PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
     @GetMapping
-    public List<PedidoModel> listar() {
-        return pedidoModelAssembler.toCollectionModel(pedidoService.listar());
+    public List<PedidoResumoModel> listar() {
+        return pedidoResumoModelAssembler.toCollectionModel(pedidoService.listar());
     }
 
     @GetMapping("/{pedidoID}")
