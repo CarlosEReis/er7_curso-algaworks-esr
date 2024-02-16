@@ -35,12 +35,12 @@ public class Pedido {
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(nullable = false) private FormaPagamento formaPagamento;
     @ManyToOne @JoinColumn(name = "usuario_cliente_id",nullable = false) private Usuario cliente;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
 
     public void calcularValorTotal() {
         this.subtotal = getItens().stream()
-            .map(item -> item.getPrecoTotal())
+            .map(ItemPedido::getPrecoTotal)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }

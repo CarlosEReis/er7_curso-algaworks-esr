@@ -75,6 +75,10 @@ public class Restaurante {
         setAtivo(false);
     }
 
+    public boolean estaInativo() {
+        return !getAtivo();
+    }
+
     public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
         return getFormasPagamento().remove(formaPagamento);
     }
@@ -89,6 +93,10 @@ public class Restaurante {
 
     public void fechar() {
         setAberto(Boolean.FALSE);
+    }
+
+    public boolean estaFechado() {
+        return !getAberto();
     }
 
     public boolean possui(Usuario responsavel) {
@@ -107,11 +115,11 @@ public class Restaurante {
         return getResponsaveis().remove(responsavel);
     }
 
-    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+    public boolean aceita(FormaPagamento formaPagamento) {
         return getFormasPagamento().contains(formaPagamento);
     }
 
-    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
-        return !aceitaFormaPagamento(formaPagamento);
+    public boolean naoAceita(FormaPagamento formaPagamento) {
+        return !aceita(formaPagamento);
     }
 }
