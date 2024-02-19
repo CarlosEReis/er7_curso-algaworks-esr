@@ -19,13 +19,13 @@ public class FluxoPedidoController {
 
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelar(@PathVariable Long pedidoId) {
-        fluxoPedidoService.cancelar(pedidoId);
+    public void cancelar(@PathVariable Long pedidoID) {
+        fluxoPedidoService.cancelar(pedidoID);
     }
 
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void entregar(@PathVariable Long pedidoId) {
-        fluxoPedidoService.entregar(pedidoId);
+    public void entregar(@PathVariable Long pedidoID) {
+        fluxoPedidoService.entregar(pedidoID);
     }
 }
