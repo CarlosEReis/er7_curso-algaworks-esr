@@ -11,20 +11,20 @@ public class FluxoPedidoService {
     private EmissaoPedidoService pedidoService;
 
     @Transactional
-    public void confirmar(Long pedidoID) {
-        var pedido = pedidoService.buscarOuFalhar(pedidoID);
+    public void confirmar(String codigoPedido) {
+        var pedido = pedidoService.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
     }
 
     @Transactional
-    public void entregar(Long pedidoID) {
-        var pedido = pedidoService.buscarOuFalhar(pedidoID);
+    public void entregar(String codigoPedido) {
+        var pedido = pedidoService.buscarOuFalhar(codigoPedido);
         pedido.entregar();
     }
 
     @Transactional
-    public void cancelar(Long pedidoID) {
-        var pedido = pedidoService.buscarOuFalhar(pedidoID);
+    public void cancelar(String codigoPedido) {
+        var pedido = pedidoService.buscarOuFalhar(codigoPedido);
         pedido.cancelar();
     }
 }
