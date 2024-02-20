@@ -7,10 +7,11 @@ import com.er7.er7foodapi.domain.repository.PedidoRepository;
 import com.er7.er7foodapi.domain.repository.filter.PedidoFilter;
 import com.er7.er7foodapi.infrastructure.repository.specification.PedidoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class EmissaoPedidoService {
@@ -22,8 +23,9 @@ public class EmissaoPedidoService {
     @Autowired private CadastroRestauranteService restauranteService;
     @Autowired private CadastroFormaPagamentoService formaPagamentoService;
 
-    public List<Pedido> listar(PedidoFilter pedidoFilter) {
-        return pedidoRepository.findAll(PedidoSpecification.usandoFiltro(pedidoFilter));
+    public Page<Pedido> listar(PedidoFilter pedidoFilter, Pageable pageable) {
+        Specification<Pedido> pedidoSpec = PedidoSpecification.usandoFiltro(pedidoFilter);
+        return pedidoRepository.findAll(pedidoSpec, pageable);
     }
 
     @Transactional

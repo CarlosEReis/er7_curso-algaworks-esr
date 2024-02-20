@@ -13,6 +13,9 @@ import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.repository.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,8 +67,10 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter) {
-        return pedidoResumoModelAssembler.toCollectionModel(pedidoService.listar(pedidoFilter));
+    public Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
+        Page<Pedido> pagePedidos = pedidoService.listar(pedidoFilter, pageable);
+        List<PedidoResumoModel> listPedidosModel = pedidoResumoModelAssembler.toCollectionModel(pagePedidos.getContent());
+        return new PageImpl<>(listPedidosModel, pageable, pagePedidos.getTotalElements());
     }
 
     @GetMapping("/{codigoPedido}")
