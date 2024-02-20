@@ -4,6 +4,8 @@ import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.exception.PedidoNaoEncontradoException;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.repository.PedidoRepository;
+import com.er7.er7foodapi.domain.repository.filter.PedidoFilter;
+import com.er7.er7foodapi.infrastructure.repository.specification.PedidoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,8 @@ public class EmissaoPedidoService {
     @Autowired private CadastroRestauranteService restauranteService;
     @Autowired private CadastroFormaPagamentoService formaPagamentoService;
 
-    public List<Pedido> listar() {
-        return pedidoRepository.findAll();
+    public List<Pedido> listar(PedidoFilter pedidoFilter) {
+        return pedidoRepository.findAll(PedidoSpecification.usandoFiltro(pedidoFilter));
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.model.Usuario;
+import com.er7.er7foodapi.domain.repository.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,8 +64,8 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoModel> listar() {
-        return pedidoResumoModelAssembler.toCollectionModel(pedidoService.listar());
+    public List<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter) {
+        return pedidoResumoModelAssembler.toCollectionModel(pedidoService.listar(pedidoFilter));
     }
 
     @GetMapping("/{codigoPedido}")
