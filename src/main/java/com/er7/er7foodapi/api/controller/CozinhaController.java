@@ -4,9 +4,14 @@ import com.er7.er7foodapi.api.assembler.CozinhaInputDisassembler;
 import com.er7.er7foodapi.api.assembler.CozinhaModelAssembler;
 import com.er7.er7foodapi.api.model.CozinhaModel;
 import com.er7.er7foodapi.api.model.input.CozinhaInput;
+import com.er7.er7foodapi.domain.model.Cozinha;
 import com.er7.er7foodapi.domain.repository.CozinhaRepository;
 import com.er7.er7foodapi.domain.service.CadastroCozinhaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +28,10 @@ public class CozinhaController {
     @Autowired private CozinhaInputDisassembler cozinhaInputDisassembler;
 
     @GetMapping
-    public List<CozinhaModel> listar() {
-        return cozinhaModelAssembler.toColletionModel(cozinhaRepository.findAll());
+    public Page<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Cozinha> pageCozinhas = cozinhaRepository.findAll(pageable);
+        List<CozinhaModel> listCozinhasModel = cozinhaModelAssembler.toColletionModel(pageCozinhas.getContent());
+        return new PageImpl<>(listCozinhasModel, pageable, pageCozinhas.getTotalElements());
     }
 
     @GetMapping("/{cozinhaId}")
