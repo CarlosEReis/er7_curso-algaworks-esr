@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.domain.repository.filter;
+package com.er7.er7foodapi.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

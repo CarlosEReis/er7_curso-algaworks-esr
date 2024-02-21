@@ -2,9 +2,9 @@ package com.er7.er7foodapi.domain.service;
 
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.exception.PedidoNaoEncontradoException;
+import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.repository.PedidoRepository;
-import com.er7.er7foodapi.domain.repository.filter.PedidoFilter;
 import com.er7.er7foodapi.infrastructure.repository.specification.PedidoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ public class EmissaoPedidoService {
     @Autowired private CadastroRestauranteService restauranteService;
     @Autowired private CadastroFormaPagamentoService formaPagamentoService;
 
-    public Page<Pedido> listar(PedidoFilter pedidoFilter, Pageable pageable) {
+    public Page<Pedido> listar(VendaDiariaFilter.PedidoFilter pedidoFilter, Pageable pageable) {
         Specification<Pedido> pedidoSpec = PedidoSpecification.usandoFiltro(pedidoFilter);
         return pedidoRepository.findAll(pedidoSpec, pageable);
     }
