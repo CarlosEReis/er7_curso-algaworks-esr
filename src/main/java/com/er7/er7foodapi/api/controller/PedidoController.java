@@ -9,7 +9,7 @@ import com.er7.er7foodapi.api.model.input.PedidoInput;
 import com.er7.er7foodapi.core.data.PageableTranslator;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
-import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
+import com.er7.er7foodapi.domain.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
@@ -69,7 +69,7 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public Page<PedidoResumoModel> pesquisar(VendaDiariaFilter.PedidoFilter pedidoFilter, Pageable pageable) {
+    public Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
 
         pageable = traduzirPageable(pageable);
 

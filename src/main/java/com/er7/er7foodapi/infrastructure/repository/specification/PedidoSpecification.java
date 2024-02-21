@@ -1,6 +1,6 @@
 package com.er7.er7foodapi.infrastructure.repository.specification;
 
-import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
+import com.er7.er7foodapi.domain.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PedidoSpecification {
 
-    public static Specification<Pedido> usandoFiltro(VendaDiariaFilter.PedidoFilter filtro) {
+    public static Specification<Pedido> usandoFiltro(PedidoFilter filtro) {
         return (root, query, builder) -> {
 
             if (Pedido.class.equals(query.getResultType())) {

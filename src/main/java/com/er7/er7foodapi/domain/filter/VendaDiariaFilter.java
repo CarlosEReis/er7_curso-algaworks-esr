@@ -17,18 +17,4 @@ public class VendaDiariaFilter {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime dataCriacaoFinal;
 
-
-    @Setter
-    @Getter
-    public static class PedidoFilter {
-
-        private Long clienteID;
-        private Long restauranteID;
-
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        private OffsetDateTime dataCriacaoInicio;
-
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        private OffsetDateTime dataCriacaoFim;
-    }
 }
