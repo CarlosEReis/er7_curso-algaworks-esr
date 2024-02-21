@@ -21,7 +21,7 @@ public class VendaQueryServiceImpl implements VendasQueryService {
     private EntityManager manager;
 
     @Override
-    public List<VendaDiaria> consultaVendasDiarias(VendaDiariaFilter filtro) {
+    public List<VendaDiaria> consultaVendasDiarias(VendaDiariaFilter filtro, String timeOffset) {
         var builder = manager.getCriteriaBuilder();
         var query = builder.createQuery(VendaDiaria.class);
         var root = query.from(Pedido.class);
@@ -37,9 +37,21 @@ public class VendaQueryServiceImpl implements VendasQueryService {
         if (filtro.getDataCriacaoFinal() != null)
             predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFinal()));
 
+        var functionConvertTZ =
+            builder
+                .function(
+                    "convert_tz",
+                    Date.class,
+                    root.get("dataCriacao"),
+                    builder.literal("+00:00"),
+                    builder.literal(timeOffset)); // todo: deixar de forma dinaminca com o parametro 'timeOffset'
+
         var functionDateDataCriacao =
             builder
-                .function("date", Date.class, root.get("dataCriacao"));
+                .function(
+                    "date",
+                    Date.class,
+                    functionConvertTZ);
 
         predicates.add(root.get("status").in(
                 StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
