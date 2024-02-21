@@ -6,6 +6,7 @@ import com.er7.er7foodapi.api.assembler.PedidoResumoModelAssembler;
 import com.er7.er7foodapi.api.model.PedidoModel;
 import com.er7.er7foodapi.api.model.PedidoResumoModel;
 import com.er7.er7foodapi.api.model.input.PedidoInput;
+import com.er7.er7foodapi.core.data.PageableTranslator;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.model.Pedido;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -68,6 +70,9 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
+
+        pageable = traduzirPageable(pageable);
+
         Page<Pedido> pagePedidos = pedidoService.listar(pedidoFilter, pageable);
         List<PedidoResumoModel> listPedidosModel = pedidoResumoModelAssembler.toCollectionModel(pagePedidos.getContent());
         return new PageImpl<>(listPedidosModel, pageable, pagePedidos.getTotalElements());
@@ -76,5 +81,17 @@ public class PedidoController {
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         return pedidoModelAssembler.toModel(pedidoService.buscarOuFalhar(codigoPedido));
+    }
+
+    private Pageable traduzirPageable(Pageable pageable) {
+        Map<String, String> mapeamento =
+            Map.of(
+                "codigo", "codigo",
+                "restaurante", "restaurante",
+                "nomeCliente", "cliente.nome",
+                "subTotal", "subTotal",
+                "valorTotal", "valorTotal"
+        );
+        return PageableTranslator.translator(pageable, mapeamento);
     }
 }
