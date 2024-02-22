@@ -30,10 +30,9 @@ public class EstatisticasController {
         return vendasQueryService.consultaVendasDiarias(filtro, timeOffset);
     }
 
-    @GetMapping(path = "/vendas-diarias", consumes = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> consultarVendasDiariasPdf(
-            VendaDiariaFilter filtro,
-            @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
+    @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro,
+                                                            @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
 
         byte[] bytesPdf = vendaReportService.emitirVendasDiarias(filtro, timeOffset);
 
