@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.infrastructure.service;
+package com.er7.er7foodapi.infrastructure.service.query;
 
 import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
