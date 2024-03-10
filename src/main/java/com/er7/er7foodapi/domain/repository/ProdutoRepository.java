@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.repository;
 
+import com.er7.er7foodapi.domain.model.FotoProduto;
 import com.er7.er7foodapi.domain.model.Produto;
 import com.er7.er7foodapi.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>, Produto
     @Query("from Produto p where p.ativo = true and p.restaurante = :restaurante")
     List<Produto> findAtivosByRestaurante(Restaurante restaurante);
 
+    @Query("select f from FotoProduto f join f.produto p where p.restaurante.id = :restauranteID and f.produto.id = :produtoID")
+    Optional<FotoProduto> findFotoById(Long restauranteID, Long produtoID);
 }
