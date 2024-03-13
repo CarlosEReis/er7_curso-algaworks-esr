@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.service;
 
+import com.er7.er7foodapi.domain.exception.FotoProdutoNaoEncontradaException;
 import com.er7.er7foodapi.domain.model.FotoProduto;
 import com.er7.er7foodapi.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,10 @@ public class CatalogoFotoProdutoService {
         fotoStorage.substituir(nomeArquivoExistente, novaFoto);
 
         return foto;
+    }
+
+    public FotoProduto buscarOuFalhar(Long restauranteID, Long produtoID) {
+       return produtoRepository.findFotoById(restauranteID, produtoID)
+               .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteID, produtoID));
     }
 }
