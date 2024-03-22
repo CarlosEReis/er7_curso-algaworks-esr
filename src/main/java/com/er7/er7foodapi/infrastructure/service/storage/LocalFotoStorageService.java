@@ -3,7 +3,6 @@ package com.er7.er7foodapi.infrastructure.service.storage;
 import com.er7.er7foodapi.core.storage.StorageProperties;
 import com.er7.er7foodapi.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
     @Autowired
