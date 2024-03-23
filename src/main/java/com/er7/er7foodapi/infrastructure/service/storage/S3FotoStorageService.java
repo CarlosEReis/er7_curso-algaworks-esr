@@ -1,13 +1,16 @@
 package com.er7.er7foodapi.infrastructure.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.er7.er7foodapi.core.storage.StorageProperties;
 import com.er7.er7foodapi.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.net.URL;
 
 @Service
 public class S3FotoStorageService implements FotoStorageService {
@@ -19,8 +22,12 @@ public class S3FotoStorageService implements FotoStorageService {
     private AmazonS3 amazonS3;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public FotoRecuperada recuperar(String nomeArquivo) {
+        var caminhoArquivo = getCaminhoArquivo(nomeArquivo);
+        URL url = amazonS3.getUrl(properties.getS3().getBucket(), caminhoArquivo);
+        return FotoRecuperada.builder()
+            .url(url.toString())
+            .build();
     }
 
     @Override
