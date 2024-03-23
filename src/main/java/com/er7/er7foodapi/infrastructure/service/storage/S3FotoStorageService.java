@@ -1,9 +1,7 @@
 package com.er7.er7foodapi.infrastructure.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.er7.er7foodapi.core.storage.StorageProperties;
 import com.er7.er7foodapi.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,14 @@ public class S3FotoStorageService implements FotoStorageService {
 
     @Override
     public void remover(String nomeArquivo) {
-
+        try {
+            String caminhoArquivo = getCaminhoArquivo(nomeArquivo);
+            var deleteObjectRequest = new DeleteObjectRequest(
+                properties.getS3().getBucket(), caminhoArquivo);
+            amazonS3.deleteObject(deleteObjectRequest);
+        } catch (Exception e) {
+            throw new StorageException("Não foi possível excluir arquivo na Amazon S3.", e);
+        }
     }
 
     private String getCaminhoArquivo(String nomeArquivo) {
