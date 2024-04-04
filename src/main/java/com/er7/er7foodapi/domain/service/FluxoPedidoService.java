@@ -1,6 +1,6 @@
 package com.er7.er7foodapi.domain.service;
 
-import com.er7.er7foodapi.domain.service.EnvioEmailService.Menssagem;
+import com.er7.er7foodapi.domain.service.EnvioEmailService.Mensagem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class FluxoPedidoService {
         var pedido = pedidoService.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
 
-        Menssagem menssagem = Menssagem.builder()
+        Mensagem menssagem = Mensagem.builder()
                 .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
                 .corpo("pedido-confirmado.html")
                 .variavel("pedido", pedido)

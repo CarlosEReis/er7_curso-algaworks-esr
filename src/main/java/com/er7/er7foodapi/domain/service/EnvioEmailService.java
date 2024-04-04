@@ -1,21 +1,19 @@
 package com.er7.er7foodapi.domain.service;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Singular;
+import lombok.*;
 
 import java.util.Map;
 import java.util.Set;
 
 public interface EnvioEmailService {
 
-    void enviar(Menssagem menssagem);
+    void enviar(Mensagem menssagem);
 
     @Getter
     @Builder
-    class Menssagem {
+    class Mensagem {
 
+        @Setter
         @Singular
         private Set<String> destinatarios;
 
