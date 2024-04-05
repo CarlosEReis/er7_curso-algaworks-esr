@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.domain.model;
 
+import com.er7.er7foodapi.domain.event.PedidoCanceladoEvent;
 import com.er7.er7foodapi.domain.event.PedidoConfirmadoEvent;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import lombok.Data;
@@ -61,7 +62,6 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);
         setDataConfirmacao(OffsetDateTime.now());
-
         registerEvent(new PedidoConfirmadoEvent(this));
     }
 
@@ -73,6 +73,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void cancelar() {
         setStatus(StatusPedido.CANCELADO);
         setDataCancelamento(OffsetDateTime.now());
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     private void setStatus(StatusPedido novoStatus) {
