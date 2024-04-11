@@ -7,11 +7,14 @@ import com.er7.er7foodapi.api.model.input.FormaPagamentoInput;
 import com.er7.er7foodapi.domain.model.FormaPagamento;
 import com.er7.er7foodapi.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/formas-pagamento")
@@ -31,8 +34,12 @@ public class FormaDePagamentoController {
 
     // TODO: listagem
     @GetMapping
-    public List<FormaPagamentoModel> listar() {
-        return pagamentoModelAssembler.toCollectionModel(pagamentoService.listar());
+    public ResponseEntity<List<FormaPagamentoModel>> listar() {
+        var formasPagamentotoModel = pagamentoModelAssembler.toCollectionModel(pagamentoService.listar());
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(formasPagamentotoModel);
     }
 
     // TODO: busca
