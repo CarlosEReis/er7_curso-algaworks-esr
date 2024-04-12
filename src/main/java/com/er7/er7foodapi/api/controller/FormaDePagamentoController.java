@@ -44,9 +44,13 @@ public class FormaDePagamentoController {
 
     // TODO: busca
     @GetMapping("/{formaPagtoID}")
-    public FormaPagamentoModel buscar(@PathVariable Long formaPagtoID) {
+    public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagtoID) {
         FormaPagamento formaPagamento = pagamentoService.buscarOuFalhar(formaPagtoID);
-        return pagamentoModelAssembler.toModel(formaPagamento);
+        var formaPagamentoModel = pagamentoModelAssembler.toModel(formaPagamento);
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(formaPagamentoModel);
     }
 
     // TODO: atualização
