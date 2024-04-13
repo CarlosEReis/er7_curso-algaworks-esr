@@ -2,8 +2,10 @@ package com.er7.er7foodapi.domain.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Data @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
@@ -16,4 +18,7 @@ public class FormaPagamento {
 
     @Column(nullable = false)
     private String descricao;
+
+    @UpdateTimestamp
+    private OffsetDateTime dataAtualizacao;
 }
