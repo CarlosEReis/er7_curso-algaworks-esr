@@ -4,9 +4,11 @@ import com.er7.er7foodapi.infrastructure.repository.CustoJpaRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.TimeZone;
 
+@EnableWebMvc
 @SpringBootApplication
 @EnableJpaRepositories(repositoryBaseClass = CustoJpaRepositoryImpl.class)
 public class Er7foodApiApplication {
