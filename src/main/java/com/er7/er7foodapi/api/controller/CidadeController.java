@@ -10,6 +10,7 @@ import com.er7.er7foodapi.domain.repository.CidadeRepository;
 import com.er7.er7foodapi.domain.service.CadastroCidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,14 @@ public class CidadeController {
 
     @ApiOperation("Busca uma cidade específica com base no ID.")
     @GetMapping("/{cidadeId}")
-    public CidadeModel buscar(@PathVariable Long cidadeId) {
+    public CidadeModel buscar(@ApiParam(value = "ID de uma cidade") @PathVariable Long cidadeId) {
         return cidadeModelAssembler.toModel(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @ApiOperation("Cadastra uma cidade.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
+    public CidadeModel adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade") @RequestBody @Valid CidadeInput cidadeInput) {
         try {
             var cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
             return cidadeModelAssembler.toModel(cidadeService.salvar(cidade));
@@ -53,7 +54,7 @@ public class CidadeController {
 
     @ApiOperation("Atualiza uma cidade específica com base no ID.")
     @PutMapping("/{cidadeId}")
-    public CidadeModel atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
+    public CidadeModel atualizar(@ApiParam(value = "ID de uma cidade") @PathVariable Long cidadeId, @ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados.") @RequestBody @Valid CidadeInput cidadeInput) {
         try {
             var cidadeDB = this.cidadeService.buscarOuFalhar(cidadeId);
             cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeDB);
@@ -66,7 +67,7 @@ public class CidadeController {
     @ApiOperation("Exclui uma cidade específica com base no ID.")
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long cidadeId) {
+    public void remover(@ApiParam(value = "ID de uma cidade") @PathVariable Long cidadeId) {
         this.cidadeService.excluir(cidadeId);
     }
 
