@@ -2,7 +2,10 @@ package com.er7.er7foodapi.core.openapi;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -15,6 +18,16 @@ public class SpringFoxConfig {
             .select()
             .apis(
                 RequestHandlerSelectors.basePackage("com.er7.er7foodapi.api"))
+            .build()
+                .apiInfo(apiInfo());
+    }
+
+    public ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title("ER7Food API")
+            .description("API aberta para clientes e restaurantes.")
+            .version("1")
+            .contact(new Contact("ER7FoodAPI", "www.er7food.com", "carlos.er7@gmail.com"))
             .build();
     }
 }
