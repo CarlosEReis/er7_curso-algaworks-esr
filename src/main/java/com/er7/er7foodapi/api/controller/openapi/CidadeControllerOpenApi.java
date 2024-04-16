@@ -3,6 +3,7 @@ package com.er7.er7foodapi.api.controller.openapi;
 import com.er7.er7foodapi.api.exceptionhandler.Problem;
 import com.er7.er7foodapi.api.model.CidadeModel;
 import com.er7.er7foodapi.api.model.input.CidadeInput;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +13,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
-@ApiOperation("Lista as cidades.")
+@Api(tags = "Cidades")
 public interface CidadeControllerOpenApi {
 
-    @ApiOperation("Lista as cidades")
+    @ApiOperation("Lista as cidades.")
     public List<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade específica com base no ID.")
