@@ -25,7 +25,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     @Autowired private GrupoInputDisassembler grupoInputDisassembler;
     @Autowired private PermissaoModelAssembler permissaoModelAssembler;
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel criar(@RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput);
@@ -37,12 +37,12 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toCollectionModel(cadastroGrupoService.listar());
     }
 
-    @GetMapping("/{grupoID}")
+    @GetMapping(path = "/{grupoID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel buscar(@PathVariable Long grupoID) {
         return grupoModelAssembler.toModel(cadastroGrupoService.buscarOuFalhar(grupoID));
     }
 
-    @PutMapping("/{grupoID}")
+    @PutMapping(path = "/{grupoID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel atualizar(@PathVariable Long grupoID, @RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupoDB = cadastroGrupoService.buscarOuFalhar(grupoID);
         grupoInputDisassembler.copyToDomainObject(grupoInput, grupoDB);

@@ -26,17 +26,17 @@ public class CidadeController implements CidadeControllerOpenApi {
     @Autowired private CidadeModelAssembler cidadeModelAssembler;
     @Autowired private CidadeInputDisassembler cidadeInputDisassembler;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CidadeModel> listar() {
         return cidadeModelAssembler.toColletionModel(cidadeRepository.findAll());
     }
 
-    @GetMapping("/{cidadeId}")
+    @GetMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         return cidadeModelAssembler.toModel(cidadeService.buscarOuFalhar(cidadeId));
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
@@ -47,7 +47,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
-    @PutMapping("/{cidadeId}")
+    @PutMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModel atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
         try {
             var cidadeDB = this.cidadeService.buscarOuFalhar(cidadeId);
