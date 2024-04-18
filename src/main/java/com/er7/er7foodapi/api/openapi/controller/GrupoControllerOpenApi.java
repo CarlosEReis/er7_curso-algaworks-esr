@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.api.controller.openapi;
+package com.er7.er7foodapi.api.openapi.controller;
 
 import com.er7.er7foodapi.api.exceptionhandler.Problem;
 import com.er7.er7foodapi.api.model.GrupoModel;

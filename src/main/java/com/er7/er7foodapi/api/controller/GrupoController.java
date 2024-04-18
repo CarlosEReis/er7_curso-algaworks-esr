@@ -3,7 +3,7 @@ package com.er7.er7foodapi.api.controller;
 import com.er7.er7foodapi.api.assembler.GrupoInputDisassembler;
 import com.er7.er7foodapi.api.assembler.GrupoModelAssembler;
 import com.er7.er7foodapi.api.assembler.PermissaoModelAssembler;
-import com.er7.er7foodapi.api.controller.openapi.GrupoControllerOpenApi;
+import com.er7.er7foodapi.api.openapi.controller.GrupoControllerOpenApi;
 import com.er7.er7foodapi.api.model.GrupoModel;
 import com.er7.er7foodapi.api.model.input.GrupoInput;
 import com.er7.er7foodapi.domain.model.Grupo;

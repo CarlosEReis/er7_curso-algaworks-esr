@@ -2,7 +2,7 @@ package com.er7.er7foodapi.api.controller;
 
 import com.er7.er7foodapi.api.assembler.CidadeInputDisassembler;
 import com.er7.er7foodapi.api.assembler.CidadeModelAssembler;
-import com.er7.er7foodapi.api.controller.openapi.CidadeControllerOpenApi;
+import com.er7.er7foodapi.api.openapi.controller.CidadeControllerOpenApi;
 import com.er7.er7foodapi.api.model.CidadeModel;
 import com.er7.er7foodapi.api.model.input.CidadeInput;
 import com.er7.er7foodapi.domain.exception.EstadoNaoEncontradoException;

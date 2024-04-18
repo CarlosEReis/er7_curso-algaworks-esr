@@ -1,4 +1,4 @@
-package com.er7.er7foodapi.api.controller.openapi.model;
+package com.er7.er7foodapi.api.openapi.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
