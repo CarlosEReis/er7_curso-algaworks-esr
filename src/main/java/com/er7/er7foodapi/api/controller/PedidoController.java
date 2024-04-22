@@ -13,6 +13,8 @@ import com.er7.er7foodapi.domain.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -68,6 +70,8 @@ public class PedidoController {
 //        return pedidosWrapper;
 //    }
 
+    @ApiImplicitParams(
+        @ApiImplicitParam(name = "campos", paramType = "query", type = "string", value = "Nomes das propriedades para filtrar na resposta, separados por vírgula."))
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
 
@@ -78,6 +82,9 @@ public class PedidoController {
         return new PageImpl<>(listPedidosModel, pageable, pagePedidos.getTotalElements());
     }
 
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "campos", paramType = "query", type = "string", value = "Nomes das propriedades para filtrar na resposta, separados por vírgula")
+    )
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         return pedidoModelAssembler.toModel(pedidoService.buscarOuFalhar(codigoPedido));
