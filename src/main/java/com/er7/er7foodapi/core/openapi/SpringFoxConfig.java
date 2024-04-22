@@ -2,8 +2,10 @@ package com.er7.er7foodapi.core.openapi;
 
 import com.er7.er7foodapi.api.exceptionhandler.Problem;
 import com.er7.er7foodapi.api.model.CozinhaModel;
+import com.er7.er7foodapi.api.model.PedidoResumoModel;
 import com.er7.er7foodapi.api.openapi.model.CozinhasModelOpenApi;
 import com.er7.er7foodapi.api.openapi.model.PageableModelOpenApi;
+import com.er7.er7foodapi.api.openapi.model.PedidoResumoModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
@@ -66,12 +68,17 @@ public class SpringFoxConfig {
                     typeResolver.resolve(Page.class, CozinhaModel.class),
                     CozinhasModelOpenApi.class
                 ))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                    typeResolver.resolve(Page.class, PedidoResumoModel.class),
+                    PedidoResumoModelOpenApi.class
+                ))
                 .apiInfo(apiInfo())
                 .tags(
                     new Tag("Cidades", "Gerencia as cidades."),
                     new Tag("Grupos", "Gerencia os grupos de usuários."),
                     new Tag("Cozinhas", "Genrencia as cozinhas."),
-                    new Tag("Formas de pagamento", "Gerencia as formas de pagamento.")
+                    new Tag("Formas de pagamento", "Gerencia as formas de pagamento."),
+                    new Tag("Pedidos", "Gerencia os pedidos.")
                 );
     }
 

@@ -6,6 +6,7 @@ import com.er7.er7foodapi.api.assembler.PedidoResumoModelAssembler;
 import com.er7.er7foodapi.api.model.PedidoModel;
 import com.er7.er7foodapi.api.model.PedidoResumoModel;
 import com.er7.er7foodapi.api.model.input.PedidoInput;
+import com.er7.er7foodapi.api.openapi.controller.PedidoControllerOpenApi;
 import com.er7.er7foodapi.core.data.PageableTranslator;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pedidos")
-public class PedidoController {
+@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired private EmissaoPedidoService pedidoService;
     @Autowired private PedidoModelAssembler pedidoModelAssembler;
