@@ -5,6 +5,7 @@ import com.er7.er7foodapi.api.assembler.RestauranteModelAssembler;
 import com.er7.er7foodapi.api.model.RestauranteModel;
 import com.er7.er7foodapi.api.model.input.RestauranteInput;
 import com.er7.er7foodapi.api.model.view.RestauranteView;
+import com.er7.er7foodapi.api.openapi.model.RestauranteBasicoModelOpenApi;
 import com.er7.er7foodapi.core.validation.ValidacaoException;
 import com.er7.er7foodapi.domain.exception.CidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.CozinhaNaoEncontradaException;
@@ -16,6 +17,9 @@ import com.er7.er7foodapi.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,13 +46,16 @@ public class RestauranteController {
     @Autowired private RestauranteModelAssembler restauranteModelAssembler;
     @Autowired private RestauranteInputDisassenbler restauranteInputDisassenbler;
 
-
+    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Nome da projeção de pedidos", name = "projecao", paramType = "query", type = "string", allowableValues = "apenas-nome")} )
     @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteModel> listar() {
         return restauranteModelAssembler.toCollectionModel(this.restauranteRepository.findAll());
     }
 
+    @ApiOperation(value = "Lista restaurantes", hidden = true)
     @JsonView(RestauranteView.ApenasNome.class)
     @GetMapping(params = "projecao=apenas-nome")
     public List<RestauranteModel> listarApenasNomes() {
