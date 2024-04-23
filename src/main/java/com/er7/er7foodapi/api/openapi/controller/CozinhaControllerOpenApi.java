@@ -24,24 +24,24 @@ public interface CozinhaControllerOpenApi {
     @ApiResponses({
         @ApiResponse(responseCode = "404", description = "Cozinha não encontrada TESTE.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "400", description = "ID da cozinha inválido.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public CozinhaModel buscar(@ApiParam(value = "ID de uma cozinha", example = "1") Long cozinhaId);
+    public CozinhaModel buscar(@ApiParam(value = "ID de uma cozinha", example = "1", required = true) Long cozinhaId);
 
     @ApiOperation("Cadastra uma cozinha.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Cozinha cadastrada.") })
-    public CozinhaModel adicionar(@ApiParam(value = "Representação do modelo de entrada de uma nova cozinha.") CozinhaInput cozinhaInput);
+    public CozinhaModel adicionar(@ApiParam(value = "Representação do modelo de entrada de uma nova cozinha.", required = true) CozinhaInput cozinhaInput);
 
     @ApiOperation("Atualiza uma cozinha por ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Cozinha Atualizada", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "404", description = "Cozinha não encontrada.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
     public CozinhaModel atualizar(
-            @ApiParam(value = "ID de uma cozinha", example = "1") Long cozinhaId,
-            @ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados") CozinhaInput cozinhaInput);
+        @ApiParam(value = "ID de uma cozinha", example = "1",required = true) Long cozinhaId,
+        @ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados", required = true) CozinhaInput cozinhaInput);
 
     @ApiOperation("Exclui uma cozinha por ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Cozinha excluída", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "404", description = "Cozinha não encontrada.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public void remover(@ApiParam(value = "ID de uma cozinha", example = "1") Long cozinhaId);
+    public void remover(@ApiParam(value = "ID de uma cozinha", example = "1", required = true) Long cozinhaId);
 }

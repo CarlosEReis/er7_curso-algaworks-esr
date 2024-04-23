@@ -20,7 +20,7 @@ public interface GrupoControllerOpenApi {
     @ApiOperation("Cadastra um grupo")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Grupo Cadastrado.")})
-    public GrupoModel criar(@ApiParam(name = "corpo", value = "Respresentação de um novo grupo.") GrupoInput grupoInput);
+    public GrupoModel criar(@ApiParam(name = "corpo", value = "Respresentação de um novo grupo.", required = true) GrupoInput grupoInput);
 
     @ApiOperation("Lista os grupos")
     public List<GrupoModel> listar();
@@ -29,18 +29,18 @@ public interface GrupoControllerOpenApi {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Grupo atualizado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class)))})
-    public GrupoModel atualizar(Long grupoID, GrupoInput grupoInput) ;
+    public GrupoModel atualizar(@ApiParam(value = "ID de um grupo", example = "1", required = true) Long grupoID, GrupoInput grupoInput) ;
 
     @ApiOperation("Busca um grupo por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "400", description = "ID do grupo inválido.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class)))})
-    public GrupoModel buscar(Long grupoID);
+    public GrupoModel buscar(@ApiParam(value = "ID de um grupo", example = "1", required = true) Long grupoID);
 
     @ApiOperation("Exclui um grupo por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Grupo excluído.", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
         @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class)))})
-    public void excluir(Long grupoID);
+    public void excluir(@ApiParam(value = "ID de um grupo", example = "1", required = true) Long grupoID);
 
 }
