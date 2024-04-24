@@ -3,17 +3,19 @@ package com.er7.er7foodapi.api.controller;
 import com.er7.er7foodapi.api.assembler.FormaPagamentoInputDisassembler;
 import com.er7.er7foodapi.api.assembler.FormaPagamentoModelAssembler;
 import com.er7.er7foodapi.api.model.FormaPagamentoModel;
+import com.er7.er7foodapi.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import com.er7.er7foodapi.domain.model.Restaurante;
 import com.er7.er7foodapi.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteID}/formas-pagamento")
-public class RestauranteFormaPagamentoController {
+@RequestMapping(path = "/restaurantes/{restauranteID}/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteFormaPagamentoController implements RestauranteFormaPagamentoControllerOpenApi {
 
     @Autowired private CadastroRestauranteService restauranteService;
     @Autowired private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
