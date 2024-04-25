@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteID}/produtos/{produtoID}/foto")
+@RequestMapping(path = "/restaurantes/{restauranteID}/produtos/{produtoID}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteProdutoFotoController {
 
     @Autowired private CadastroProdutoService cadastroProduto;
@@ -50,13 +50,13 @@ public class RestauranteProdutoFotoController {
         return fotoProdutoModelAssembler.toModel(fotoSalva);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping()
     public FotoProdutoModel buscar(@PathVariable Long restauranteID, @PathVariable Long produtoID) {
         var fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteID, produtoID);
         return fotoProdutoModelAssembler.toModel(fotoProduto);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servirFoto(@PathVariable Long restauranteID, @PathVariable Long produtoID, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
             FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteID, produtoID);
