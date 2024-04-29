@@ -6,10 +6,12 @@ import com.er7.er7foodapi.api.model.UsuarioModel;
 import com.er7.er7foodapi.api.model.input.SenhaInput;
 import com.er7.er7foodapi.api.model.input.UsuarioComSenhaInput;
 import com.er7.er7foodapi.api.model.input.UsuarioInput;
+import com.er7.er7foodapi.api.openapi.controller.UsuarioControllerOpenApi;
 import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,30 +19,30 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
-public class UsuarioController {
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired private CadastroUsuarioService usuarioService;
     @Autowired private UsuarioModelAssembler usuarioModelAssembler;
     @Autowired private UsuarioInputDisassembler usuarioInputDisassembler;
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioModel adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
         Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioInput);
         return usuarioModelAssembler.toModel(usuarioService.salvar(usuario));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UsuarioModel> listar() {
         return usuarioModelAssembler.toCollectionModel(usuarioService.listar());
     }
 
-    @GetMapping("/{usuarioID}")
+    @GetMapping(path = "/{usuarioID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UsuarioModel buscar(@PathVariable Long usuarioID) {
         return usuarioModelAssembler.toModel(usuarioService.buscarOuFalhar(usuarioID));
     }
 
-    @PutMapping("/{usuarioID}")
+    @PutMapping(path = "/{usuarioID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UsuarioModel atualizar(@PathVariable Long usuarioID, @RequestBody @Valid UsuarioInput usuarioInput) {
         Usuario usuarioDB = usuarioService.buscarOuFalhar(usuarioID);
         usuarioInputDisassembler.copyToDomainObject(usuarioInput, usuarioDB);
