@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
 import com.er7.er7foodapi.domain.model.dto.VendaDiaria;
 import com.er7.er7foodapi.domain.service.VendaReportService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/estatisticas")
-public class EstatisticasController {
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired private VendasQueryService vendasQueryService;
     @Autowired private VendaReportService vendaReportService;
