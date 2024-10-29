@@ -10,9 +10,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
-
-import java.util.List;
 
 @Api(tags = "Grupos")
 public interface GrupoControllerOpenApi {
@@ -23,7 +22,7 @@ public interface GrupoControllerOpenApi {
     GrupoModel criar(@ApiParam(name = "corpo", value = "Respresentação de um novo grupo.", required = true) GrupoInput grupoInput);
 
     @ApiOperation("Lista os grupos")
-    List<GrupoModel> listar();
+    CollectionModel<GrupoModel> listar();
 
     @ApiOperation("Atualiza um grupo por ID")
     @ApiResponses({

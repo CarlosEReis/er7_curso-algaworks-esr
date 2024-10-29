@@ -7,25 +7,26 @@ import com.er7.er7foodapi.api.model.PedidoModel;
 import com.er7.er7foodapi.api.model.PedidoResumoModel;
 import com.er7.er7foodapi.api.model.input.PedidoInput;
 import com.er7.er7foodapi.api.openapi.controller.PedidoControllerOpenApi;
+import com.er7.er7foodapi.core.data.PageWrapper;
 import com.er7.er7foodapi.core.data.PageableTranslator;
 import com.er7.er7foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.filter.PedidoFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.model.Usuario;
+import com.er7.er7foodapi.domain.repository.PedidoRepository;
 import com.er7.er7foodapi.domain.service.EmissaoPedidoService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,9 +34,11 @@ import java.util.Map;
 public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired private EmissaoPedidoService pedidoService;
+    @Autowired private PedidoRepository pedidoRepository;
     @Autowired private PedidoModelAssembler pedidoModelAssembler;
     @Autowired private PedidoInputDisassembler pedidoInputDisassembler;
     @Autowired private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+    @Autowired private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -75,13 +78,11 @@ public class PedidoController implements PedidoControllerOpenApi {
     @ApiImplicitParams(
         @ApiImplicitParam(name = "campos", paramType = "query", type = "string", value = "Nomes das propriedades para filtrar na resposta, separados por vírgula."))
     @GetMapping
-    public Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
-
-        pageable = traduzirPageable(pageable);
-
-        Page<Pedido> pagePedidos = pedidoService.listar(pedidoFilter, pageable);
-        List<PedidoResumoModel> listPedidosModel = pedidoResumoModelAssembler.toCollectionModel(pagePedidos.getContent());
-        return new PageImpl<>(listPedidosModel, pageable, pagePedidos.getTotalElements());
+    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable) {
+        Pageable pageableTraduzido = traduzirPageable(pageable);
+        var pedidosPage = pedidoService.listar(pedidoFilter, pageableTraduzido);
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
 
     @ApiImplicitParams(
@@ -93,13 +94,16 @@ public class PedidoController implements PedidoControllerOpenApi {
     }
 
     private Pageable traduzirPageable(Pageable pageable) {
-        Map<String, String> mapeamento =
-            Map.of(
+        var mapeamento = Map.of(
                 "codigo", "codigo",
-                "restaurante", "restaurante",
-                "nomeCliente", "cliente.nome",
-                "subTotal", "subTotal",
-                "valorTotal", "valorTotal"
+                "subtotal", "subtotal",
+                "taxaFrete", "taxaFrete",
+                "valorTotal", "valorTotal",
+                "dataCriacao", "dataCriacao",
+                "nomerestaurante", "restaurante.nome",
+                "restaurante.id", "restaurante.id",
+                "cliente.id", "cliente.id",
+                "cliente.nome", "cliente.nome"
         );
         return PageableTranslator.translator(pageable, mapeamento);
     }

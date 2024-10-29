@@ -1,27 +1,37 @@
 package com.er7.er7foodapi.api.assembler;
 
+import com.er7.er7foodapi.api.FoodLinks;
+import com.er7.er7foodapi.api.controller.UsuarioController;
 import com.er7.er7foodapi.api.model.UsuarioModel;
 import com.er7.er7foodapi.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-
 @Component
-public class UsuarioModelAssembler {
+public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<Usuario, UsuarioModel> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    @Autowired private ModelMapper modelMapper;
+    @Autowired private FoodLinks foodLinks;
 
+    public UsuarioModelAssembler() {
+        super(UsuarioController.class, UsuarioModel.class);
+    }
+
+    @Override
     public UsuarioModel toModel(Usuario usuario) {
-        return modelMapper.map(usuario, UsuarioModel.class);
+        var usuarioModel = createModelWithId(usuario.getId(), usuario);
+        modelMapper.map(usuario, usuarioModel);
+        usuarioModel.add(foodLinks.linkToUsuarios("usuarios"));
+        usuarioModel.add(foodLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        return usuarioModel;
     }
 
-    public List<UsuarioModel> toCollectionModel(Collection<Usuario> usuarios) {
-        return usuarios.stream()
-            .map(this::toModel)
-            .toList();
+    @Override
+    public CollectionModel<UsuarioModel> toCollectionModel(Iterable<? extends Usuario> entities) {
+        return super.toCollectionModel(entities).add(foodLinks.linkToUsuarios());
     }
+
 }

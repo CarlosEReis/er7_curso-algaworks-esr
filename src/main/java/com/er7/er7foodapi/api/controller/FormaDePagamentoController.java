@@ -9,6 +9,7 @@ import com.er7.er7foodapi.domain.model.FormaPagamento;
 import com.er7.er7foodapi.domain.repository.FormaPagamentoRepository;
 import com.er7.er7foodapi.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +20,6 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -42,7 +42,7 @@ public class FormaDePagamentoController implements FormasDePagamentoControllerOp
 
     // TODO: listagem
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest webRequest) {
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest webRequest) {
         ShallowEtagHeaderFilter.disableContentCaching(webRequest.getRequest());
 
         String etag = "0";

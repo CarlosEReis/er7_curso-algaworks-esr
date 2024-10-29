@@ -10,12 +10,12 @@ import com.er7.er7foodapi.api.openapi.controller.UsuarioControllerOpenApi;
 import com.er7.er7foodapi.domain.model.Usuario;
 import com.er7.er7foodapi.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -33,8 +33,9 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UsuarioModel> listar() {
-        return usuarioModelAssembler.toCollectionModel(usuarioService.listar());
+    public CollectionModel<UsuarioModel> listar() {
+        var todosUsuarios = usuarioService.listar();
+        return usuarioModelAssembler.toCollectionModel(todosUsuarios);
     }
 
     @GetMapping(path = "/{usuarioID}", produces = MediaType.APPLICATION_JSON_VALUE)

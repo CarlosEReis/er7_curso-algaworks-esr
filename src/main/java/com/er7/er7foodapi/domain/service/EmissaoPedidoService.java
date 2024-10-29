@@ -3,7 +3,6 @@ package com.er7.er7foodapi.domain.service;
 import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.er7.er7foodapi.domain.exception.PedidoNaoEncontradoException;
 import com.er7.er7foodapi.domain.filter.PedidoFilter;
-import com.er7.er7foodapi.domain.filter.VendaDiariaFilter;
 import com.er7.er7foodapi.domain.model.Pedido;
 import com.er7.er7foodapi.domain.repository.PedidoRepository;
 import com.er7.er7foodapi.infrastructure.repository.specification.PedidoSpecification;

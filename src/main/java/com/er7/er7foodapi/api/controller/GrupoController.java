@@ -9,12 +9,12 @@ import com.er7.er7foodapi.api.model.input.GrupoInput;
 import com.er7.er7foodapi.domain.model.Grupo;
 import com.er7.er7foodapi.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,7 +33,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     }
 
     @GetMapping
-    public List<GrupoModel> listar() {
+    public CollectionModel<GrupoModel> listar() {
         return grupoModelAssembler.toCollectionModel(cadastroGrupoService.listar());
     }
 

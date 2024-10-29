@@ -1,28 +1,35 @@
 package com.er7.er7foodapi.api.assembler;
 
+import com.er7.er7foodapi.api.FoodLinks;
+import com.er7.er7foodapi.api.controller.FormaDePagamentoController;
 import com.er7.er7foodapi.api.model.FormaPagamentoModel;
 import com.er7.er7foodapi.domain.model.FormaPagamento;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-
 @Component
-public class FormaPagamentoModelAssembler {
+public class FormaPagamentoModelAssembler extends RepresentationModelAssemblerSupport<FormaPagamento, FormaPagamentoModel> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    @Autowired private ModelMapper modelMapper;
+    @Autowired private FoodLinks foodLinks;
 
+    public FormaPagamentoModelAssembler() {
+        super(FormaDePagamentoController.class, FormaPagamentoModel.class);
+    }
+
+    @Override
     public FormaPagamentoModel toModel(FormaPagamento formaPagamento) {
-        return modelMapper.map(formaPagamento, FormaPagamentoModel.class);
+        var formaPagamentoModel = createModelWithId(formaPagamento.getId(), formaPagamento);
+        modelMapper.map(formaPagamento, formaPagamentoModel);
+        formaPagamentoModel.add(foodLinks.linkToFormasPagamento("formasPagamento"));
+        return formaPagamentoModel;
     }
 
-    public List<FormaPagamentoModel> toCollectionModel(Collection<FormaPagamento> formasPagamentos) {
-        return formasPagamentos.stream()
-            .map(this::toModel)
-            .toList();
+    @Override
+    public CollectionModel<FormaPagamentoModel> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
+        return super.toCollectionModel(entities).add(foodLinks.linkToFormasPagamento("formasPagamento"));
     }
-
 }

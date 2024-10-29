@@ -1,26 +1,35 @@
 package com.er7.er7foodapi.api.assembler;
 
+import com.er7.er7foodapi.api.FoodLinks;
+import com.er7.er7foodapi.api.controller.EstadoController;
 import com.er7.er7foodapi.api.model.EstadoModel;
 import com.er7.er7foodapi.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class EstadoModelAssembler {
+public class EstadoModelAssembler extends RepresentationModelAssemblerSupport<Estado, EstadoModel> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    @Autowired private ModelMapper modelMapper;
+    @Autowired private FoodLinks foodLinks;
 
-    public EstadoModel toModel(Estado estado) {
-        return modelMapper.map(estado, EstadoModel.class);
+    public EstadoModelAssembler() {
+        super(EstadoController.class, EstadoModel.class);
     }
 
-    public List<EstadoModel> toColletionModel(List<Estado> estados) {
-        return estados.stream()
-            .map(this::toModel)
-            .toList();
+    public EstadoModel toModel(Estado estado) {
+        var estadoModel = createModelWithId(estado.getId(), estado);
+        modelMapper.map(estado, estadoModel);
+        estadoModel.add(foodLinks.linkToEstados("estados"));
+        return estadoModel;
+    }
+
+    @Override
+    public CollectionModel<EstadoModel> toCollectionModel(Iterable<? extends Estado> entities) {
+        return super.toCollectionModel(entities)
+            .add(foodLinks.linkToEstados());
     }
 }

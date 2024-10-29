@@ -3,10 +3,11 @@ package com.er7.er7foodapi.api.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter
-public class EnderecoModel {
+public class EnderecoModel extends RepresentationModel<EnderecoModel> {
 
     @ApiModelProperty(example = "38400-000")
     private String cep;

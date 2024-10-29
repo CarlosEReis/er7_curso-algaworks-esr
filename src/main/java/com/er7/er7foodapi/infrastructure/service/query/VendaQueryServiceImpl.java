@@ -28,8 +28,8 @@ public class VendaQueryServiceImpl implements VendasQueryService {
 
         var predicates = new ArrayList<Predicate>();
 
-        if (filtro.getClienteID() != null )
-            predicates.add(builder.equal(root.get("cliente").get("id"), filtro.getClienteID()));
+        if (filtro.getRestauranteId() != null )
+            predicates.add(builder.equal(root.get("restaurante").get("id"), filtro.getRestauranteId()));
 
         if (filtro.getDataCriacaoInicio() != null)
             predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoInicio()));

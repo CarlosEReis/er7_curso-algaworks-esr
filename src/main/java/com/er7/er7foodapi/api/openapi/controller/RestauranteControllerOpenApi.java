@@ -1,30 +1,35 @@
 package com.er7.er7foodapi.api.openapi.controller;
 
 import com.er7.er7foodapi.api.exceptionhandler.Problem;
+import com.er7.er7foodapi.api.model.RestauranteApenasNomeModel;
+import com.er7.er7foodapi.api.model.RestauranteBasicoModel;
 import com.er7.er7foodapi.api.model.RestauranteModel;
 import com.er7.er7foodapi.api.model.input.RestauranteInput;
-import com.er7.er7foodapi.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
 
-    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+    @ApiOperation(value = "Lista restaurantes")
     @ApiImplicitParams({
         @ApiImplicitParam(value = "Nome da projeção de pedidos", name = "projecao", paramType = "query", type = "string", allowableValues = "apenas-nome")} )
-    public List<RestauranteModel> listar();
+    public CollectionModel<RestauranteBasicoModel> listar();
 
+    @ApiIgnore
     @ApiOperation(value = "Lista restaurantes", hidden = true)
-    public List<RestauranteModel> listarApenasNomes();
+    public CollectionModel<RestauranteApenasNomeModel> listarApenasNomes();
 
     @ApiOperation("Buscar em restaurante por ID")
     @ApiResponses({
@@ -48,25 +53,25 @@ public interface RestauranteControllerOpenApi {
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Restaurante ativado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public void ativar(Long restauranteID);
+    public ResponseEntity<Void> ativar(Long restauranteID);
 
     @ApiOperation("Inativa um restaurante por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Restaurante inativado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public void inativar(@PathVariable Long restauranteID);
+    public ResponseEntity<Void> inativar(@PathVariable Long restauranteID);
 
     @ApiOperation("Abre um restaurante por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Restaurante aberto com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public void abrir(@PathVariable Long restauranteID);
+    public ResponseEntity<Void> abrir(@PathVariable Long restauranteID);
 
     @ApiOperation("Fecha um restaurante por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Restaurante fechado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Problem.class))) })
-    public void fechar(@PathVariable Long restauranteID);
+    public ResponseEntity<Void> fechar(@PathVariable Long restauranteID);
 
     @ApiOperation("Ativa múltiplos restaurantes")
     @ApiResponses({

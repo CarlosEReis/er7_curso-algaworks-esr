@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/restaurantes/{restauranteID}/produtos/{produtoID}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     @Autowired private CadastroProdutoService cadastroProduto;
@@ -38,6 +38,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
                                           @Valid FotoProdutoInput fotoProdutoInput,
                                           @RequestPart(required = true) MultipartFile arquivo) throws IOException {
+
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 //        MultipartFile arquivo = fotoProdutoInput.getArquivo();
 
@@ -91,9 +92,9 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     }
 
     @GetMapping(produces = MediaType.ALL_VALUE)
-    public ResponseEntity<?> servir(@PathVariable Long restauranteID, @PathVariable Long produtoID, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+    public ResponseEntity<?> servir(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
-            FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteID, produtoID);
+            FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
 
             MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
             List<MediaType> mediaTypesAceitas = MediaType.parseMediaTypes(acceptHeader);

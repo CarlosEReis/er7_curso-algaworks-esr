@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 
 @Api(tags = "Pedidos")
@@ -26,7 +26,7 @@ public interface PedidoControllerOpenApi {
     @ApiImplicitParams({
         @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
             name = "campos", paramType = "query", type = "string")})
-    Page<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable);
+    PagedModel<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter, Pageable pageable);
 
     @ApiOperation("Busca um pedido pelo código.")
     @ApiImplicitParams({

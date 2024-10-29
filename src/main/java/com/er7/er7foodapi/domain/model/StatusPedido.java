@@ -23,4 +23,8 @@ public enum StatusPedido {
     public boolean naoPodeAlterarPara(StatusPedido novoStatus) {
         return !novoStatus.statusAnteriores.contains(this);
     }
+
+    public boolean podeSerAlteradoPara(StatusPedido status) {
+        return !naoPodeAlterarPara(status);
+    }
 }

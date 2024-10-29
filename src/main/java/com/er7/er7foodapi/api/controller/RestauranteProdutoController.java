@@ -1,5 +1,6 @@
 package com.er7.er7foodapi.api.controller;
 
+import com.er7.er7foodapi.api.FoodLinks;
 import com.er7.er7foodapi.api.assembler.ProdutoInputDisassembler;
 import com.er7.er7foodapi.api.assembler.ProdutoModelAssembler;
 import com.er7.er7foodapi.api.model.ProdutoModel;
@@ -11,6 +12,7 @@ import com.er7.er7foodapi.domain.repository.ProdutoRepository;
 import com.er7.er7foodapi.domain.service.CadastroProdutoService;
 import com.er7.er7foodapi.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired private ProdutoModelAssembler produtoModelAssembler;
     @Autowired private CadastroRestauranteService cadastroRestaurante;
     @Autowired private ProdutoInputDisassembler produtoInputDisassembler;
+    @Autowired private FoodLinks foodLinks;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,8 +42,9 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         return produtoModelAssembler.toModel(produto);
     }
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ProdutoModel> listar(@PathVariable Long restauranteID, @RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoModel> listar(@PathVariable Long restauranteID, @RequestParam(required = false) Boolean incluirInativos) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteID);
 
         List<Produto> todosProdutos = null;
@@ -50,7 +54,9 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         else
          todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
 
-        return produtoModelAssembler.toCollectionModel(todosProdutos);
+        return produtoModelAssembler
+            .toCollectionModel(todosProdutos)
+            .add(foodLinks.linkToProdutos(restauranteID));
     }
 
     @GetMapping(path = "/{produtoID}", produces = MediaType.APPLICATION_JSON_VALUE)
