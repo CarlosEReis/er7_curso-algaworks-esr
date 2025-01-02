@@ -1,8 +1,11 @@
 package com.er7.er7foodapi.core.openapi;
 
 import com.er7.er7foodapi.api.exceptionhandler.Problem;
-import com.er7.er7foodapi.api.model.*;
-import com.er7.er7foodapi.api.openapi.model.*;
+import com.er7.er7foodapi.api.v1.model.*;
+import com.er7.er7foodapi.api.v1.openapi.model.*;
+import com.er7.er7foodapi.api.v2.model.CidadeModelV2;
+import com.er7.er7foodapi.api.v2.model.CozinhaModelV2;
+import com.er7.er7foodapi.api.v2.openapi.model.CidadesModelV2OpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
@@ -41,12 +44,13 @@ import java.util.function.Consumer;
 public class SpringFoxConfig {
 
     @Bean
-    public Docket apiDocket() {
+    public Docket apiDocketV1() {
         var typeResolver = new TypeResolver();
         return new Docket(DocumentationType.OAS_30)
+            .groupName("V1")
             .select()
             .apis(RequestHandlerSelectors.basePackage("com.er7.er7foodapi.api"))
-            .paths(PathSelectors.any())
+            .paths(PathSelectors.ant("/v1/**"))
             .build()
             .useDefaultResponseMessages(false)
             .globalResponses(HttpMethod.GET, globalGetResponseMessages())
@@ -100,7 +104,7 @@ public class SpringFoxConfig {
                     typeResolver.resolve(CollectionModel.class, UsuarioModel.class),
                     UsuariosModelOpenApi.class))
 
-            .apiInfo(apiInfo())
+            .apiInfo(apiInfoV1())
             .tags(new Tag("Cidades", "Gerencia as cidades"),
                     new Tag("Grupos", "Gerencia os grupos de usuários"),
                     new Tag("Cozinhas", "Gerencia as cozinhas"),
@@ -113,6 +117,42 @@ public class SpringFoxConfig {
                     new Tag("Estatísticas", "Estatísticas da AlgaFood"),
                     new Tag("Permissões", "Gerencia as permissões"));
 
+    }
+
+    @Bean
+    public Docket apiDocketV2() {
+        var typeResolver = new TypeResolver();
+        return new Docket(DocumentationType.OAS_30)
+                .groupName("V2")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.er7.er7foodapi.api"))
+                .paths(PathSelectors.ant("/v2/**"))
+                .build()
+                .useDefaultResponseMessages(false)
+                .globalResponses(HttpMethod.GET, globalGetResponseMessages())
+                .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
+                .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
+                .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class,
+                        URL.class, URI.class, URLStreamHandler.class, Resource.class,
+                        File.class, InputStream.class)
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(PagedModel.class, CozinhaModelV2.class),
+                        CidadesModelV2OpenApi.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, CidadeModelV2.class),
+                        CidadesModelV2OpenApi.class))
+
+                .apiInfo(apiInfoV2())
+                .tags(
+                    new Tag("Cidades", ""),
+                    new Tag("Cozinhas", "")
+                );
     }
 
     @Bean
@@ -185,11 +225,22 @@ public class SpringFoxConfig {
                         q -> q.name("Problema").namespace("com.er7.er7foodapi.api.exceptionhandler")))));
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiInfoV1() {
+        return new ApiInfoBuilder()
+                .title("ER7Food API (Depreciada)")
+                .description("API aberta para clientes e restaurantes. <br>" +
+                        "<strong style=\"color: red;\">Essa versão da API está depreciada e deixará de existir a partir de 01/01/2025. " +
+                        "Use a versão mais atual da API.</strong>")
+                .version("1")
+                .contact(new Contact("ER7FoodAPI", "www.er7food.com", "carlos.er7@gmail.com"))
+                .build();
+    }
+
+    private ApiInfo apiInfoV2() {
         return new ApiInfoBuilder()
                 .title("ER7Food API")
                 .description("API aberta para clientes e restaurantes.")
-                .version("1")
+                .version("2")
                 .contact(new Contact("ER7FoodAPI", "www.er7food.com", "carlos.er7@gmail.com"))
                 .build();
     }

@@ -1,7 +1,7 @@
 package com.er7.er7foodapi.core.jackson;
 
-import com.er7.er7foodapi.api.model.mixin.CidadeMixin;
-import com.er7.er7foodapi.api.model.mixin.CozinhaMixin;
+import com.er7.er7foodapi.api.v1.model.mixin.CidadeMixin;
+import com.er7.er7foodapi.api.v1.model.mixin.CozinhaMixin;
 import com.er7.er7foodapi.domain.model.Cidade;
 import com.er7.er7foodapi.domain.model.Cozinha;
 import com.fasterxml.jackson.databind.module.SimpleModule;

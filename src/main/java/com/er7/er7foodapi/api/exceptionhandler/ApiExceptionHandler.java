@@ -7,6 +7,7 @@ import com.er7.er7foodapi.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -31,7 +33,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//ControllerAdvice
+@Slf4j
+@ControllerAdvice
 public class    ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String MSG_ERRO_GENERICA_USUARIO_FINAL
@@ -55,7 +58,7 @@ public class    ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var problemType = ProblemType.ERRO_DE_SISTEMA;
         String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
-        ex.getStackTrace();
+        log.error(ex.getMessage(), ex);
         var problem = createProblemBuilder(status, problemType, MSG_ERRO_GENERICA_USUARIO_FINAL)
                 .userMessage(detail)
                 .build();
